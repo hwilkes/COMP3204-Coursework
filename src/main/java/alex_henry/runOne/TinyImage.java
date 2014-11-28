@@ -20,14 +20,13 @@ public class TinyImage  {
 		if(original.height > original.width)
 		{
 			newPixels = new float[original.width][original.width];
-			System.out.println("TEST");
 			int toDrop = original.height - original.width;
 			int topDrop = toDrop/2;
 			int bottomDrop = toDrop-topDrop;
 
 			for(int i = topDrop; i < original.height - bottomDrop; i++ )
 			{
-				newPixels[i] = original.pixels[i].clone();
+				newPixels[i-topDrop] = original.pixels[i].clone();
 			}
 
 		}
@@ -44,16 +43,13 @@ public class TinyImage  {
 				for(int i = leftDrop; i < original.width - rightDrop; i++)
 				{
 					newPixels[j][i-leftDrop] = original.pixels[j][i];
-					System.out.print(newPixels[j][i-leftDrop]);
 					
 				}
-				System.out.println();
 			}
 		}
 		else
 		{
 			newPixels = original.pixels.clone();
-			System.out.println("TEST2");
 		}
 		
 		square = new FImage(newPixels);
