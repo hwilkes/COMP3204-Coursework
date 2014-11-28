@@ -1,4 +1,4 @@
-package alex+henry;
+package alex_henry;
 
 import org.openimaj.image.DisplayUtilities;
 import org.openimaj.image.MBFImage;
