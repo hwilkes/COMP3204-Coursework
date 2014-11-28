@@ -1,7 +1,7 @@
-package alex_henry;
+package alex_henry.runOne;
 
-import java.util.Vector;
 
+import org.openimaj.feature.FloatFV;
 import org.openimaj.image.FImage;
 import org.openimaj.image.processing.resize.ResizeProcessor;
 
@@ -97,19 +97,19 @@ public class TinyImage  {
 		
 	}
 	
-	public Vector<Float> getVector()
+	public FloatFV getVector()
 	{
-		Vector<Float> v = new Vector<Float>();
+		float[] v = new float[processed.width*processed.height];
 		
-		for(float[] row : processed.pixels)
+		for(int x = 0; x < processed.height; x++)
 		{
-			for(float f : row)
+			for(int y = 0; y < processed.width; y++)
 			{
-				v.add(f);	
+				v[x*processed.width+y] = processed.pixels[x][y];	
 			}
 		}
 		
-		return v;
+		return new FloatFV(v);
 	}
 	
 	public FImage getSquare()
