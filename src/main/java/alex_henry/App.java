@@ -15,7 +15,7 @@ public class App {
     public static void main( String[] args ) {
     	//Create an image
         MBFImage image = new MBFImage(320,70, ColourSpace.RGB);
-
+        
         //Fill the image with white
         image.fill(RGBColour.WHITE);
         		        
@@ -25,7 +25,11 @@ public class App {
         //Apply a Gaussian blur
         image.processInplace(new FGaussianConvolve(2f));
         
+        TinyImage tinyImage = new TinyImage(image.flatten(),16,16);
+        
         //Display the image
         DisplayUtilities.display(image);
+        DisplayUtilities.display(tinyImage.getSquare());
+        DisplayUtilities.display(tinyImage.getProcessed());
     }
 }
