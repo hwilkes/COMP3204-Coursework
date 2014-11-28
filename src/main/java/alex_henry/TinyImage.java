@@ -1,5 +1,7 @@
 package alex_henry;
 
+import java.util.Vector;
+
 import org.openimaj.image.FImage;
 import org.openimaj.image.processing.resize.ResizeProcessor;
 
@@ -53,9 +55,61 @@ public class TinyImage  {
 			newPixels = original.pixels.clone();
 			System.out.println("TEST2");
 		}
+		
 		square = new FImage(newPixels);
 		processed = ResizeProcessor.resample(new FImage(newPixels), x, y);
 
+		double sum = 0.0;
+		float smallest = Float.MAX_VALUE;
+		float biggest = Float.MIN_VALUE;
+		
+		for(float[] row : processed.pixels)
+		{
+			for(float pixel : row)
+			{
+				sum =+ pixel;			
+				if(pixel > biggest)
+				{
+					biggest = pixel;
+				}
+				if(pixel < smallest)
+				{
+					smallest = pixel;
+				}
+			}
+		}
+		float scale = 1/(biggest - smallest);
+		float mean = (float)(sum/(processed.width*processed.height));
+		/*
+		 * Set image to have a zero mean
+		 * 
+		 * */
+
+		
+		for(int i = 0; i < processed.height; i++)
+		{
+			for(int j = 0; j < processed.width; j++)
+			{
+				processed.pixels[i][j] = scale*(processed.pixels[i][j] - mean); 
+			}
+		}
+		
+		
+	}
+	
+	public Vector<Float> getVector()
+	{
+		Vector<Float> v = new Vector<Float>();
+		
+		for(float[] row : processed.pixels)
+		{
+			for(float f : row)
+			{
+				v.add(f);	
+			}
+		}
+		
+		return v;
 	}
 	
 	public FImage getSquare()

@@ -1,11 +1,17 @@
 package alex_henry;
 
+import java.net.URL;
+
+import javax.swing.JFileChooser;
+
 import org.openimaj.image.DisplayUtilities;
+import org.openimaj.image.ImageUtilities;
 import org.openimaj.image.MBFImage;
 import org.openimaj.image.colour.ColourSpace;
 import org.openimaj.image.colour.RGBColour;
 import org.openimaj.image.processing.convolution.FGaussianConvolve;
 import org.openimaj.image.typography.hershey.HersheyFont;
+
 
 /**
  * OpenIMAJ Hello world!
@@ -13,18 +19,16 @@ import org.openimaj.image.typography.hershey.HersheyFont;
  */
 public class App {
     public static void main( String[] args ) {
-    	//Create an image
-        MBFImage image = new MBFImage(320,70, ColourSpace.RGB);
-        
-        //Fill the image with white
-        image.fill(RGBColour.WHITE);
-        		        
-        //Render some test into the image
-        image.drawText("Hello World", 10, 60, HersheyFont.CURSIVE, 50, RGBColour.BLACK);
-
-        //Apply a Gaussian blur
-        image.processInplace(new FGaussianConvolve(2f));
-        
+    	MBFImage image = null;
+    	
+    	try{
+    		image = ImageUtilities.readMBF(new URL("http://comp3204.ecs.soton.ac.uk/images/johnny5.png"));
+    	}
+    	catch(Exception e)
+    	{
+    		e.printStackTrace();
+    		return;
+    	}
         TinyImage tinyImage = new TinyImage(image.flatten(),16,16);
         
         //Display the image
