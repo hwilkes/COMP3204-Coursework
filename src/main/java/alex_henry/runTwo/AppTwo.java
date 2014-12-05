@@ -11,9 +11,16 @@ import org.openimaj.image.FImage;
 import org.openimaj.image.ImageUtilities;
 
 public class AppTwo {
+	
+	static FloatFV nans = new FloatFV();
+	
 	public static void main(String args[])
 	{
-		
+		float[] nanarray = new float[64];
+		for(int i=0; i<64;i++){
+			nanarray[i] = Float.NaN;
+		}
+		nans = new FloatFV(nanarray);
 		
 		//BagOfVisualWords bovw = new BagOfVisualWords(null);
 		
@@ -31,9 +38,12 @@ public class AppTwo {
 		
 		Set<FImage> trainingImages = new HashSet<FImage>();
 		
-		File folder = new File("/home/hw17g12/Downloads/training/");
+		File folder = new File("/home/acl1g12/Documents/COMP3204 Computer Vision/COMP3204-Coursework/training");
+		int subs = folder.listFiles().length - 1;
+		int subsAdded = 0;
 		for(File subFolder : folder.listFiles())
 		{
+			
 			VFSListDataset<FImage> images;
 			try {
 				images = new VFSListDataset<FImage>(subFolder.getAbsolutePath(), ImageUtilities.FIMAGE_READER);
@@ -41,6 +51,8 @@ public class AppTwo {
 				e.printStackTrace();
 				break;
 			}
+			
+			System.out.println(subsAdded++ + "/" + subs);
 			
 			int toUse = 3;
 			if(toUse > images.size()){
@@ -57,17 +69,25 @@ public class AppTwo {
 		PatchExtractor extractor = new PatchExtractor();
 		Set<FloatFV> vectors = new HashSet<FloatFV>();
 		int patched = 0;
+		int nanVectors = 0;
 		for(FImage f : trainingImages){
 			for(FImage patch : extractor.getPatches(f)){
-				vectors.add(extractor.getVector(patch));
+				FloatFV vector = extractor.getVector(patch);
+				if(isNaNy(vector)){
+					nanVectors++;
+				} else {
+					vectors.add(vector);
+				}
 			}
 			patched++;
 			if(patched%100 == 0){
 				System.out.println(patched + " images patched");
 			}
 		}
-		System.out.println("Patching complete");
-		System.out.println(vectors.size() + " patches created");
+		System.out.println("NaN containing vectors: " + nanVectors);
+		//System.out.println("Patching complete");
+		System.out.println(vectors.size() + " vectors created");
+		
 		int k = 50;
 		//figure out the k means
 		Set<FloatFV> means = new KMeans().getMeans(k, vectors);
@@ -82,6 +102,15 @@ public class AppTwo {
 		 * bag of words = 
 		 * 
 		 * */
+	}
+	
+	public static boolean isNaNy(FloatFV vector){
+		for(float f : vector.values){
+			if(Float.isNaN(f)){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public static void testKMeans()
