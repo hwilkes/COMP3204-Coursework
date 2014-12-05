@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.Set;
 
 import org.openimaj.feature.FloatFV;
@@ -53,40 +52,48 @@ public class KMeans {
 			
 			//for each vector
 			Parallel.forEach(vectors, new Operation<FloatFV>(){
-				
+				FloatFVComparison euc = FloatFVComparison.EUCLIDEAN;
 				@Override
 				public void perform(FloatFV object) {
-					
-					VectorComparison comp = new VectorComparison();
-					comp.setTarget(object);
+
+					double nearestDistance = Double.MAX_VALUE;
+					FloatFV nearestMean = null;
+
 					//get the nearest mean
-					PriorityQueue<FloatFV> q = new PriorityQueue<FloatFV>(k,comp);
-					//assign it to the nearest mean
-					for(FloatFV mean : meanClone){
-						q.add(mean);
+					for(FloatFV mean : meanClone)
+					{
+						double distance = euc.compare(mean, object);
+						if(distance < nearestDistance)
+						{
+							nearestDistance = distance;
+							nearestMean = mean;
+						}
 					}
-					FloatFV mean = q.poll();
-					//add this vector as a mapping
-					finalMap.get(mean).add(object);
+					//assign it to the nearest mean
+					finalMap.get(nearestMean).add(object);
 				}
-				
 			});
+
 			System.out.println("loop " + loops + " Assignment complete");
 			//recalculate the mean to be the average of its assigned values
 			Set<FloatFV> updatedMeans = new HashSet<FloatFV>();
 			int updated = 0;
 			for(FloatFV m: means)
 			{
-				
+				//get the near points for this mean
+				List<FloatFV> nears = map.get(m);
+
+				if(nears.isEmpty())
+				{
+					continue;
+				}
+
+				//build a new array to store the sum of the means nearest points
 				Double[] array = new Double[m.length()];
 				for(int i = 0; i < m.length(); i++){
 					array[i] = 0.0;
 				}
-				List<FloatFV> nears = map.get(m);
-				
-				if(nears.isEmpty())
-					continue;
-				
+
 				for(FloatFV n : nears)
 				{
 					for(int i = 0; i < n.length(); i++)
