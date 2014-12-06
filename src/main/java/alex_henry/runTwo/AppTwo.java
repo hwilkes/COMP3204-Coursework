@@ -1,7 +1,10 @@
 package alex_henry.runTwo;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.vfs2.FileSystemException;
@@ -9,6 +12,9 @@ import org.openimaj.data.dataset.VFSListDataset;
 import org.openimaj.feature.FloatFV;
 import org.openimaj.image.FImage;
 import org.openimaj.image.ImageUtilities;
+import org.openimaj.ml.annotation.Annotated;
+import org.openimaj.ml.annotation.AnnotatedObject;
+import org.openimaj.ml.annotation.ScoredAnnotation;
 
 public class AppTwo {
 	
@@ -27,11 +33,12 @@ public class AppTwo {
 		 * 
 		 * 
 		 * */
-	
+		List<Annotated<FImage,String>> testingAnnotations = new ArrayList<Annotated<FImage,String>>();
 		
 		Set<FImage> trainingImages = new HashSet<FImage>();
-
-		File folder = new File("./images/training");
+		List<Annotated<FImage,String>> trainingAnnotations = new ArrayList<Annotated<FImage,String>>();
+		//File folder = new File("./images/training");
+		File folder = new File("/home/hw17g12/Downloads/training");
 		int subs = folder.listFiles().length - 1;
 		int subsAdded = 0;
 		for(File subFolder : folder.listFiles())
@@ -47,7 +54,7 @@ public class AppTwo {
 			
 			System.out.println(subsAdded++ + "/" + subs);
 			
-			int toUse = 3;
+			int toUse = 2;
 			if(toUse > images.size()){
 				toUse = images.size();
 			}
@@ -56,7 +63,18 @@ public class AppTwo {
 			{
 				FImage f = images.get(i);
 				trainingImages.add(f);
+				trainingAnnotations.add(new AnnotatedObject<FImage,String>(f,subFolder.getName()));
 			}
+			
+			for(int i = toUse; i < images.size(); i++)
+			{
+				if(i == toUse)
+				{
+					testingAnnotations.add(new AnnotatedObject<FImage,String>(images.get(i),subFolder.getName()));
+				}
+				trainingAnnotations.add(new AnnotatedObject<FImage,String>(images.get(i),subFolder.getName()));
+			}
+			
 		}
 		//get ALL the vectors!
 		PatchExtractor extractor = new PatchExtractor();
@@ -81,12 +99,32 @@ public class AppTwo {
 		//System.out.println("Patching complete");
 		System.out.println(vectors.size() + " vectors created");
 		
-		int k = 50;
+		int k = 500;
 		//figure out the k means
-		Set<FloatFV> means = new KMeans().getMeans(k, vectors);
+		Set<FloatFV> vocabulary = new KMeans().getMeans(k, vectors);
 		System.out.println("I did it!");
+		/*
+		 * KMeans calss produces a bag-of-visual-words feature using the patches produced by the PatchExtractor
+		 * */
+		FloatFV[] array = new FloatFV[vocabulary.size()];
+		Classifier classifier = new Classifier(Arrays.asList(vocabulary.toArray(array)));
+		
+		classifier.train(trainingAnnotations);
 		
 		
+		for(Annotated<FImage,String> anno : testingAnnotations)
+		{
+			List<ScoredAnnotation<String>> annotations = classifier.annotate(anno.getObject());
+			System.out.println("Actual class:" + anno.getAnnotations() );
+			System.out.println("Number of predicted annotations: "+annotations.size());
+			for(ScoredAnnotation<String> anno2 : annotations)
+			{
+				System.out.println("Label: "+anno2.annotation+" Confidence: "+anno2.confidence);
+			}
+			System.out.println();
+		}
+		
+			
 		
 		
 		/*classify image {

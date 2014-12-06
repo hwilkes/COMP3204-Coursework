@@ -1,14 +1,38 @@
 package alex_henry.runTwo;
 
-import org.openimaj.ml.annotation.linear.*;
+import java.util.List;
+
+import org.openimaj.feature.FloatFV;
+import org.openimaj.image.FImage;
+import org.openimaj.ml.annotation.Annotated;
+import org.openimaj.ml.annotation.ScoredAnnotation;
+import org.openimaj.ml.annotation.linear.LiblinearAnnotator;
 
 public class Classifier {
 
-	public Classifier()
+	private LiblinearAnnotator<FImage,String> annotator;
+	
+	public Classifier(List<FloatFV> dictionary)
 	{
-		/*BagOfWordsFeatureExtractor extractor = new BagOfWordsFeatureExtractor();
-		LiblinearAnnotator annotator = new LiblinearAnnotator(null, null, null, 0, 0);
-		*/
+		BOVWExtractor extractor = new BOVWExtractor(dictionary);
+		annotator = new LiblinearAnnotator<FImage, String>(extractor,LiblinearAnnotator.Mode.MULTICLASS,
+				de.bwaldvogel.liblinear.SolverType.MCSVM_CS,1.0,1.0);
 	}
 	
+	public Classifier(BOVWExtractor extractor)
+	{
+		annotator = new LiblinearAnnotator<FImage, String>(extractor,LiblinearAnnotator.Mode.MULTICLASS,
+				de.bwaldvogel.liblinear.SolverType.MCSVM_CS,1.0,1.0);
+		
+	}
+	
+	public void train(List<? extends Annotated<FImage,String>> data)
+	{
+		annotator.train(data);
+	}
+	
+	public List<ScoredAnnotation<String>> annotate(FImage image)
+	{
+		return annotator.annotate(image);
+	}
 }
