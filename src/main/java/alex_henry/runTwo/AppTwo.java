@@ -12,15 +12,8 @@ import org.openimaj.image.ImageUtilities;
 
 public class AppTwo {
 	
-	static FloatFV nans = new FloatFV();
-	
 	public static void main(String args[])
 	{
-		float[] nanarray = new float[64];
-		for(int i=0; i<64;i++){
-			nanarray[i] = Float.NaN;
-		}
-		nans = new FloatFV(nanarray);
 		
 		//BagOfVisualWords bovw = new BagOfVisualWords(null);
 		
