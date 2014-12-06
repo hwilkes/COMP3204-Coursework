@@ -1,12 +1,10 @@
 package alex_henry.runTwo;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,8 +28,8 @@ public class KMeans {
 			means.add(iter.next());
 		}
 
-		Map<FloatFV, List<FloatFV>> prevMap = null;
-		Map<FloatFV, List<FloatFV>> map = null;
+		Map<FloatFV, Set<FloatFV>> prevMap = null;
+		Map<FloatFV, Set<FloatFV>> map = null;
 		
 		int loops = 0;
 		
@@ -39,8 +37,8 @@ public class KMeans {
 			prevMap = map;
 			//mean to collection of nearests
 			//final Map<FloatFV, List<FloatFV>> finalMap = new HashMap<FloatFV,List<FloatFV>>();
-			map = new HashMap<FloatFV, List<FloatFV>>();
-			final Map<FloatFV, List<FloatFV>> finalMap = Collections.synchronizedMap(map);
+			map = new HashMap<FloatFV, Set<FloatFV>>();
+			final Map<FloatFV, Set<FloatFV>> finalMap = Collections.synchronizedMap(map);
 			
 			final Set<FloatFV> meanClone = new HashSet<FloatFV>();
 			for(FloatFV f : means)
@@ -48,7 +46,7 @@ public class KMeans {
 				meanClone.add(f);
 			}
 			for(FloatFV mean : means){
-				map.put(mean, Collections.synchronizedList(new ArrayList<FloatFV>()));
+				map.put(mean, Collections.synchronizedSet(new HashSet<FloatFV>()));
 			}
 			
 			//for each vector
@@ -84,7 +82,7 @@ public class KMeans {
 
 						@Override
 						public void perform(FloatFV object) {
-							List<FloatFV> nears = finalMap.get(object);
+							Set<FloatFV> nears = finalMap.get(object);
 							
 							if(nears.isEmpty())
 								return;
