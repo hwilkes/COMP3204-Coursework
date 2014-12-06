@@ -1,12 +1,14 @@
 package alex_henry.runTwo;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
+import java.util.Vector;
 
 import org.openimaj.feature.FloatFV;
 import org.openimaj.feature.FloatFVComparison;
@@ -15,6 +17,8 @@ import org.openimaj.util.parallel.Parallel;
 
 public class KMeans {
 
+	private Random r = new Random();
+	
 	public Set<FloatFV> getMeans(final int k, Set<FloatFV> vectors)
 	{
 		if(k > vectors.size())
@@ -22,10 +26,18 @@ public class KMeans {
 
 		//assume k means to using existing items
 		Set<FloatFV> means = new HashSet<FloatFV>();
-		Iterator<FloatFV> iter = vectors.iterator();
+//		Iterator<FloatFV> iter = vectors.iterator();
+//		for(int i = 0; i < k; i++)
+//		{
+//			means.add(iter.next());
+//		}
+		Vector vec = new Vector(Arrays.asList(vectors.toArray()));
+		
 		for(int i = 0; i < k; i++)
 		{
-			means.add(iter.next());
+			FloatFV toAdd = (FloatFV) vec.remove(r.nextInt(vec.size()));
+			means.add(toAdd);
+			System.out.println(vectors.size());
 		}
 
 		Map<FloatFV, Set<FloatFV>> prevMap = null;
