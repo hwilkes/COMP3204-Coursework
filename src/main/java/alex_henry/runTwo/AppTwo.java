@@ -30,7 +30,7 @@ public class AppTwo {
 	
 		
 		Set<FImage> trainingImages = new HashSet<FImage>();
-		
+
 		File folder = new File("./images/training");
 		int subs = folder.listFiles().length - 1;
 		int subsAdded = 0;

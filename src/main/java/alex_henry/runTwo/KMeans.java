@@ -38,8 +38,9 @@ public class KMeans {
 		do{
 			prevMap = map;
 			//mean to collection of nearests
-			final Map<FloatFV, List<FloatFV>> finalMap = new HashMap<FloatFV,List<FloatFV>>();
-			map = finalMap;
+			//final Map<FloatFV, List<FloatFV>> finalMap = new HashMap<FloatFV,List<FloatFV>>();
+			map = new HashMap<FloatFV, List<FloatFV>>();
+			final Map<FloatFV, List<FloatFV>> finalMap = Collections.synchronizedMap(map);
 			
 			final Set<FloatFV> meanClone = new HashSet<FloatFV>();
 			for(FloatFV f : means)
@@ -76,50 +77,45 @@ public class KMeans {
 
 			System.out.println("loop " + loops + " Assignment complete");
 			//recalculate the mean to be the average of its assigned values
-			Set<FloatFV> updatedMeans = new HashSet<FloatFV>();
-			int updated = 0;
-			for(FloatFV m: means)
-			{
-				//get the near points for this mean
-				List<FloatFV> nears = map.get(m);
 
-				if(nears.isEmpty())
-				{
-					continue;
-				}
+			final Set<FloatFV> updatedMeans = Collections.synchronizedSet(new HashSet<FloatFV>());
+			//final int updated = 0;
+			Parallel.forEach(means,new Operation<FloatFV>(){
 
-				//build a new array to store the sum of the means nearest points
-				Double[] array = new Double[m.length()];
-				for(int i = 0; i < m.length(); i++){
-					array[i] = 0.0;
-				}
+						@Override
+						public void perform(FloatFV object) {
+							List<FloatFV> nears = finalMap.get(object);
+							
+							if(nears.isEmpty())
+								return;
+							
+							Double[] array = new Double[object.length()];
+							for(int i = 0; i < object.length(); i++){
+								array[i] = 0.0;
+							}
+							
+							for(FloatFV n : nears)
+							{
+								for(int i = 0; i < n.length(); i++)
+								{
+									array[i] += (double) n.values[i];
+								}				
+							}
+			
+							float[] fArray = new float[object.length()];
+							for(int i = 0; i < array.length; i++)
+							{
+								fArray[i] = (float) (array[i]/nears.size());
+							}
+							
+							
+							FloatFV newMean = new FloatFV(fArray);
+							updatedMeans.add(newMean);
 
-				for(FloatFV n : nears)
-				{
-					for(int i = 0; i < n.length(); i++)
-					{
-						array[i] += (double) n.values[i];
-					}				
-				}
-
-				float[] fArray = new float[m.length()];
-				for(int i = 0; i < array.length; i++)
-				{
-					fArray[i] = (float) (array[i]/nears.size());
-					
-					if(array[i] == 0 && nears.size() == 0){
-						System.out.println("NaN at index:"+i);
-					}
-				}
+						}
 				
-				
-				FloatFV newMean = new FloatFV(fArray);
-				updatedMeans.add(newMean);
-				updated ++;
-				if(updated%10 == 0){
-					System.out.println("loop" + loops + " updated means:" + updated);
-				}
-			}
+					});
+			
 
 			means = updatedMeans;
 			System.out.println("updates completed for loop" + loops);
