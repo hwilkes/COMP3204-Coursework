@@ -116,17 +116,15 @@ public class KMeans {
 			
 
 			means = updatedMeans;
-			System.out.println("updates completed for loop" + loops);
-			for(FloatFV f : means)
-			{
-				System.out.println(f.toString());;
-			}
-			System.out.println("means " + means.size() + "\n");
-
-			
+			System.out.println("updates completed for loop:" + loops + " means:" + means.size() + "\n");
 			loops++;
+			
 		}while(!map.equals(prevMap) );
 		
+		for(FloatFV f : means)
+		{
+			System.out.println(f.toString());;
+		}
 		return means;
 	}
 
