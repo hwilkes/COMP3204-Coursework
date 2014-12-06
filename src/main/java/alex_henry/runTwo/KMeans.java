@@ -40,8 +40,8 @@ public class KMeans {
 			prevMap = map;
 			//mean to collection of nearests
 			//final Map<FloatFV, List<FloatFV>> finalMap = new HashMap<FloatFV,List<FloatFV>>();
-			final Map<FloatFV, List<FloatFV>> finalMap = Collections.synchronizedMap( new HashMap<FloatFV,List<FloatFV>>());
-			map = finalMap;
+			map = new HashMap<FloatFV, List<FloatFV>>();
+			final Map<FloatFV, List<FloatFV>> finalMap = Collections.synchronizedMap(map);
 			
 			final Set<FloatFV> meanClone = new HashSet<FloatFV>();
 			for(FloatFV f : means)
@@ -76,7 +76,6 @@ public class KMeans {
 			//recalculate the mean to be the average of its assigned values
 			final Set<FloatFV> updatedMeans = Collections.synchronizedSet(new HashSet<FloatFV>());
 			//final int updated = 0;
-			final Map<FloatFV, List<FloatFV>> mapCopy = map;
 			Parallel.forEach(means,new Operation<FloatFV>()
 					{
 
@@ -86,7 +85,7 @@ public class KMeans {
 							for(int i = 0; i < object.length(); i++){
 								array[i] = 0.0;
 							}
-							List<FloatFV> nears = mapCopy.get(object);
+							List<FloatFV> nears = finalMap.get(object);
 							
 							if(nears.isEmpty())
 								return;
@@ -103,19 +102,11 @@ public class KMeans {
 							for(int i = 0; i < array.length; i++)
 							{
 								fArray[i] = (float) (array[i]/nears.size());
-								
-								if(array[i] == 0 && nears.size() == 0){
-									System.out.println("NaN at index:"+i);
-								}
 							}
 							
 							
 							FloatFV newMean = new FloatFV(fArray);
 							updatedMeans.add(newMean);
-//							updated++;
-//							if(updated%10 == 0){
-//								System.out.println("loop" + loops + " updated means:" + updated);
-//							}
 
 						}
 				
