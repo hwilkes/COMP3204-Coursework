@@ -144,6 +144,7 @@ public class AppTwo {
 		return false;
 	}
 	
+	@SuppressWarnings("unused")
 	public static void testKMeans()
 	{
 		int k = 2;
