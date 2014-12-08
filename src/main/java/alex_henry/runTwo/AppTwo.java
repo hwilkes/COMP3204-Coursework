@@ -38,7 +38,7 @@ public class AppTwo {
 		Set<FImage> trainingImages = new HashSet<FImage>();
 		List<Annotated<FImage,String>> trainingAnnotations = new ArrayList<Annotated<FImage,String>>();
 		//File folder = new File("./images/training");
-		File folder = new File("/home/hw17g12/Downloads/training");
+		File folder = new File("./images/training");
 		int subs = folder.listFiles().length - 1;
 		int subsAdded = 0;
 		for(File subFolder : folder.listFiles())
