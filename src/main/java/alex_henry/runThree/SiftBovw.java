@@ -22,7 +22,7 @@ import org.openimaj.ml.annotation.ScoredAnnotation;
 public class SiftBovw {
 	public static void main(String[] args)
 	{
-List<Annotated<FImage,String>> testingAnnotations = new ArrayList<Annotated<FImage,String>>();
+		List<Annotated<FImage,String>> testingAnnotations = new ArrayList<Annotated<FImage,String>>();
 		
 		Set<FImage> trainingImages = new HashSet<FImage>();
 		List<Annotated<FImage,String>> trainingAnnotations = new ArrayList<Annotated<FImage,String>>();
