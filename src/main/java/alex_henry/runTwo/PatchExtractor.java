@@ -1,6 +1,8 @@
 package alex_henry.runTwo;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.openimaj.feature.FloatFV;
@@ -38,6 +40,26 @@ public class PatchExtractor {
 		}
 		return patches;
 	} 
+	
+	public List<List<FImage>> getOrderedPatches(FImage image)
+	{
+		List<List<FImage>> patches = new ArrayList<List<FImage>>();
+		
+		for(int x = 0; x < image.width-size; x += sampleSize)
+		{
+			ArrayList<FImage> line = new ArrayList<FImage>();
+			for(int y = 0; y < image.height-size; y += sampleSize)
+			{
+				FImage patch = image.extractROI(x, y, size, size);
+				
+				line.add(patch.normalise());
+			}
+			
+			patches.add(line);
+		}
+		
+		return patches;
+	}
 	
 	public FloatFV getVector(FImage patch)
 	{
