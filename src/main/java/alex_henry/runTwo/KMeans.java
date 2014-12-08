@@ -2,7 +2,6 @@ package alex_henry.runTwo;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -138,25 +137,6 @@ public class KMeans {
 			System.out.println(f.toString());;
 		}
 		return means;
-	}
-
-
-	static class VectorComparison implements Comparator<FloatFV>{
-
-		FloatFV target;
-
-		public void setTarget(FloatFV target){
-			this.target = target;
-		}
-		
-		@Override
-		public int compare(FloatFV arg0, FloatFV arg1) {
-			FloatFVComparison comp = FloatFVComparison.EUCLIDEAN;
-			Double dist0 = comp.compare(arg0, target);
-			Double dist1 = comp.compare(arg1, target);
-			return dist0.compareTo(dist1);
-		}
-
 	}
 
 }
