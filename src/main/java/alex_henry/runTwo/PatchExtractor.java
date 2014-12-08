@@ -1,13 +1,8 @@
 package alex_henry.runTwo;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import org.openimaj.feature.ArrayFeatureVector;
-import org.openimaj.feature.FeatureExtractor;
 import org.openimaj.feature.FloatFV;
 import org.openimaj.image.FImage;
 
