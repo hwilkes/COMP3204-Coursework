@@ -12,7 +12,7 @@ import org.openimaj.image.feature.local.engine.DoGSIFTEngine;
 import org.openimaj.image.feature.local.keypoints.Keypoint;
 
 
-public class BOVWExtractorByte implements FeatureExtractor<SparseIntFV, FImage> {
+public class BOVWExtractorByte implements BOVWExtractor<SparseIntFV> {
 
 	List<ByteFV> dictionary;
 	DoGSIFTEngine engine;

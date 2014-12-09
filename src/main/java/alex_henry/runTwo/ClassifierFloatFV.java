@@ -8,18 +8,20 @@ import org.openimaj.ml.annotation.Annotated;
 import org.openimaj.ml.annotation.ScoredAnnotation;
 import org.openimaj.ml.annotation.linear.LiblinearAnnotator;
 
-public class Classifier {
+import alex_henry.runThree.Classifier;
+
+public class ClassifierFloatFV implements Classifier {
 
 	private LiblinearAnnotator<FImage,String> annotator;
 	
-	public Classifier(List<FloatFV> dictionary)
+	public ClassifierFloatFV(List<FloatFV> dictionary)
 	{
-		BOVWExtractor extractor = new BOVWExtractor(dictionary);
+		BOVWExtractorFloatFV extractor = new BOVWExtractorFloatFV(dictionary);
 		annotator = new LiblinearAnnotator<FImage, String>(extractor,LiblinearAnnotator.Mode.MULTICLASS,
 				de.bwaldvogel.liblinear.SolverType.MCSVM_CS,1.0,1.0);
 	}
 	
-	public Classifier(BOVWExtractor extractor)
+	public ClassifierFloatFV(BOVWExtractorFloatFV extractor)
 	{
 		annotator = new LiblinearAnnotator<FImage, String>(extractor,LiblinearAnnotator.Mode.MULTICLASS,
 				de.bwaldvogel.liblinear.SolverType.MCSVM_CS,1.0,1.0);

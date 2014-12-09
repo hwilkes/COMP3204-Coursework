@@ -101,13 +101,13 @@ public class AppTwo {
 		
 		int k = 500;
 		//figure out the k means
-		Set<FloatFV> vocabulary = new KMeans().getMeans(k, vectors);
+		Set<FloatFV> vocabulary = new KMeansFloatFV().getMeans(k, vectors);
 		System.out.println("I did it!");
 		/*
 		 * KMeans calss produces a bag-of-visual-words feature using the patches produced by the PatchExtractor
 		 * */
 		FloatFV[] array = new FloatFV[vocabulary.size()];
-		Classifier classifier = new Classifier(Arrays.asList(vocabulary.toArray(array)));
+		ClassifierFloatFV classifier = new ClassifierFloatFV(Arrays.asList(vocabulary.toArray(array)));
 		
 		classifier.train(trainingAnnotations);
 		
@@ -156,7 +156,7 @@ public class AppTwo {
 			vectors.add(new FloatFV(pair));
 		}
 		
-		Set<FloatFV> means = new KMeans().getMeans(k, vectors);
+		Set<FloatFV> means = new KMeansFloatFV().getMeans(k, vectors);
 		System.out.println("I did it!");
 		
 	}

@@ -94,7 +94,7 @@ public class SiftBovw {
 		 * KMeans calss produces a bag-of-visual-words feature using the patches produced by the PatchExtractor
 		 * */
 		ByteFV[] array = new ByteFV[vocabulary.size()];
-		ClassifierByte classifier = new ClassifierByte(Arrays.asList(vocabulary.toArray(array)));
+		ClassifierByteFV classifier = new ClassifierByteFV(Arrays.asList(vocabulary.toArray(array)));
 		
 		classifier.train(trainingAnnotations);
 		

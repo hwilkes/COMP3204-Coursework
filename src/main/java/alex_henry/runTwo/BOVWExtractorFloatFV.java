@@ -9,13 +9,15 @@ import org.openimaj.feature.FloatFVComparison;
 import org.openimaj.feature.SparseFloatFV;
 import org.openimaj.image.FImage;
 
+import alex_henry.runThree.BOVWExtractor;
 
-public class BOVWExtractor implements FeatureExtractor<SparseFloatFV, FImage> {
+
+public class BOVWExtractorFloatFV implements BOVWExtractor<SparseFloatFV> {
 
 	List<FloatFV> dictionary;
 	PatchExtractor extractor;
 	
-	public BOVWExtractor(List<FloatFV> dictionary)
+	public BOVWExtractorFloatFV(List<FloatFV> dictionary)
 	{
 		this.dictionary = dictionary;
 		extractor = new PatchExtractor();

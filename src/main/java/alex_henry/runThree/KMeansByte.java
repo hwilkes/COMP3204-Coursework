@@ -15,7 +15,8 @@ import org.openimaj.feature.ByteFVComparison;
 import org.openimaj.util.function.Operation;
 import org.openimaj.util.parallel.Parallel;
 
-public class KMeansByte {
+public class KMeansByte implements KMeans<ByteFV>
+{
 
 	private Random r = new Random();
 	
@@ -158,5 +159,4 @@ public class KMeansByte {
 		}
 
 	}
-
 }

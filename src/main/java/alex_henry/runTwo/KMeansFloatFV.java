@@ -14,7 +14,10 @@ import org.openimaj.feature.FloatFVComparison;
 import org.openimaj.util.function.Operation;
 import org.openimaj.util.parallel.Parallel;
 
-public class KMeans {
+import alex_henry.runThree.KMeans;
+
+public class KMeansFloatFV implements KMeans<FloatFV> 
+{
 
 	private Random r = new Random();
 	
