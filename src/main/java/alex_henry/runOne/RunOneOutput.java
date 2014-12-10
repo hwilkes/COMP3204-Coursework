@@ -109,5 +109,7 @@ public class RunOneOutput {
 			String prediction = classifier.classify(testingImages.get(key), kNearestNeighbours);
 			pWriter.println(key +" "+prediction);
 		}
+		
+		pWriter.close();
 	}
 }
