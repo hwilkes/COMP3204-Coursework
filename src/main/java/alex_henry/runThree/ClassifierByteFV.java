@@ -4,19 +4,20 @@ import java.util.List;
 
 import org.openimaj.feature.ByteFV;
 import org.openimaj.image.FImage;
+import org.openimaj.image.feature.dense.gradient.dsift.AbstractDenseSIFT;
 import org.openimaj.ml.annotation.Annotated;
 import org.openimaj.ml.annotation.ScoredAnnotation;
 import org.openimaj.ml.annotation.linear.LiblinearAnnotator;
 
 import alex_henry.interfaces.Classifier;
 
-public class ClassifierByteFV implements Classifier<ByteFV> {
+public class ClassifierByteFV<SIFT extends AbstractDenseSIFT<FImage>> implements Classifier<ByteFV> {
 
 	private LiblinearAnnotator<FImage,String> annotator;
 	
-	public ClassifierByteFV(List<ByteFV> dictionary)
+	public ClassifierByteFV(List<ByteFV> dictionary, SIFT method)
 	{
-		BOVWExtractorByte extractor = new BOVWExtractorByte(dictionary);
+		BOVWExtractorByte extractor = new BOVWExtractorByte<SIFT>(dictionary,method);
 		annotator = new LiblinearAnnotator<FImage, String>(extractor,LiblinearAnnotator.Mode.MULTICLASS,
 				de.bwaldvogel.liblinear.SolverType.MCSVM_CS,1.0,1.0);
 	}

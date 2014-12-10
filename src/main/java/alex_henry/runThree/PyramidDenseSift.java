@@ -13,9 +13,9 @@ import org.openimaj.feature.ByteFV;
 import org.openimaj.feature.local.list.LocalFeatureList;
 import org.openimaj.image.FImage;
 import org.openimaj.image.ImageUtilities;
-import org.openimaj.image.feature.local.engine.BasicGridSIFTEngine;
-import org.openimaj.image.feature.local.engine.DoGSIFTEngineOptions;
-import org.openimaj.image.feature.local.keypoints.Keypoint;
+import org.openimaj.image.feature.dense.gradient.dsift.ByteDSIFTKeypoint;
+import org.openimaj.image.feature.dense.gradient.dsift.DenseSIFT;
+import org.openimaj.image.feature.dense.gradient.dsift.PyramidDenseSIFT;
 import org.openimaj.ml.annotation.Annotated;
 import org.openimaj.ml.annotation.AnnotatedObject;
 import org.openimaj.ml.annotation.ScoredAnnotation;
@@ -66,31 +66,28 @@ public class PyramidDenseSift {
 			}
 		}
 
-		
-		
-		
+
+
+
 		Set<ByteFV> vectors = new HashSet<ByteFV>();
+		PyramidDenseSIFT<FImage> pds = new PyramidDenseSIFT<FImage>(new DenseSIFT(), 0, 8,16,24,32);
 		for(FImage f : trainingImages)
 		{
-			DoGSIFTEngineOptions<FImage> options = new DoGSIFTEngineOptions<FImage>();
-			options.setScales((int)Math.log(Math.min(f.height,f.width)));
-			
-			
-			BasicGridSIFTEngine engine = new BasicGridSIFTEngine(false,options);
+			pds.analyseImage(f);
+			//int sifted = 0;
+			LocalFeatureList<ByteDSIFTKeypoint> featurePoints = pds.getByteKeypoints();
 
-			int sifted = 0;
-			LocalFeatureList<Keypoint> featurePoints = engine.findFeatures(f);
-			
-			for(Keypoint point : featurePoints){
+			for(ByteDSIFTKeypoint point : featurePoints){
 
 				//build a sift descriptor, add to the list of sift descriptors
 				vectors.add(point.getFeatureVector());
-				sifted++;
+				/*sifted++;
 				if(sifted%100 == 0){
 					System.out.println(sifted + " images sifted");
-				}
+				}*/
 			}
 		}
+
 
 
 		//System.out.println("Patching complete");
@@ -104,11 +101,11 @@ public class PyramidDenseSift {
 		 * KMeans calss produces a bag-of-visual-words feature using the patches produced by the PatchExtractor
 		 * */
 		ByteFV[] array = new ByteFV[vocabulary.size()];
-		ClassifierByteFV classifier = new ClassifierByteFV(Arrays.asList(vocabulary.toArray(array)));
-
+		ClassifierByteFV<PyramidDenseSIFT<FImage>> classifier = new ClassifierByteFV<PyramidDenseSIFT<FImage>>(Arrays.asList(vocabulary.toArray(array)),new PyramidDenseSIFT<FImage>(new DenseSIFT(), 0, 8,16,24,32));
+		
 		classifier.train(trainingAnnotations);
-
-
+		
+		
 		for(Annotated<FImage,String> anno : testingAnnotations)
 		{
 			List<ScoredAnnotation<String>> annotations = classifier.annotate(anno.getObject());

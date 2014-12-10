@@ -18,10 +18,11 @@ import org.openimaj.feature.ByteFV;
 import org.openimaj.feature.local.list.LocalFeatureList;
 import org.openimaj.image.FImage;
 import org.openimaj.image.ImageUtilities;
+import org.openimaj.image.feature.dense.gradient.dsift.DenseSIFT;
+import org.openimaj.image.feature.dense.gradient.dsift.PyramidDenseSIFT;
 import org.openimaj.image.feature.local.engine.BasicGridSIFTEngine;
 import org.openimaj.image.feature.local.keypoints.Keypoint;
 import org.openimaj.ml.annotation.Annotated;
-import org.openimaj.ml.annotation.AnnotatedObject;
 import org.openimaj.ml.annotation.ScoredAnnotation;
 
 public class RunThreeOutput {
@@ -84,7 +85,7 @@ public class RunThreeOutput {
 		 * KMeans class produces a bag-of-visual-words feature using the patches produced by the PatchExtractor
 		 * */
 		ByteFV[] array = new ByteFV[vocabulary.size()];
-		ClassifierByteFV classifier = new ClassifierByteFV(Arrays.asList(vocabulary.toArray(array)));
+		ClassifierByteFV<PyramidDenseSIFT<FImage>> classifier = new ClassifierByteFV<PyramidDenseSIFT<FImage>>(Arrays.asList(vocabulary.toArray(array)),new PyramidDenseSIFT<FImage>(new DenseSIFT(), 0, 8,16,24,32));
 
 		classifier.train(trainingAnnotations);
 				

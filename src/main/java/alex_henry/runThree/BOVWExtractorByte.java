@@ -4,23 +4,22 @@ import java.util.List;
 
 import org.openimaj.feature.ByteFV;
 import org.openimaj.feature.ByteFVComparison;
-import org.openimaj.feature.FeatureExtractor;
 import org.openimaj.feature.SparseIntFV;
 import org.openimaj.feature.local.list.LocalFeatureList;
 import org.openimaj.image.FImage;
-import org.openimaj.image.feature.local.engine.DoGSIFTEngine;
-import org.openimaj.image.feature.local.keypoints.Keypoint;
+import org.openimaj.image.feature.dense.gradient.dsift.AbstractDenseSIFT;
+import org.openimaj.image.feature.dense.gradient.dsift.ByteDSIFTKeypoint;
 
 
-public class BOVWExtractorByte implements BOVWExtractor<SparseIntFV> {
+public class BOVWExtractorByte<SIFT extends AbstractDenseSIFT<FImage>> implements BOVWExtractor<SparseIntFV> {
 
 	List<ByteFV> dictionary;
-	DoGSIFTEngine engine;
+	SIFT method;
 	
-	public BOVWExtractorByte(List<ByteFV> dictionary)
+	public BOVWExtractorByte(List<ByteFV> dictionary, SIFT method)
 	{
 		this.dictionary = dictionary;
-		engine = new DoGSIFTEngine();
+		this.method = method;
 	}
 	
 	@Override
@@ -31,8 +30,9 @@ public class BOVWExtractorByte implements BOVWExtractor<SparseIntFV> {
 			wordCounts[i] = 0;
 		}
 		
-		LocalFeatureList<Keypoint> keypoints  = engine.findFeatures(object);
-		for(Keypoint keypoint: keypoints)
+		method.analyseImage(object);
+		LocalFeatureList<ByteDSIFTKeypoint> keypoints  = method.getByteKeypoints();
+		for(ByteDSIFTKeypoint keypoint: keypoints)
 		{
 			ByteFV vector = keypoint.getFeatureVector();
 

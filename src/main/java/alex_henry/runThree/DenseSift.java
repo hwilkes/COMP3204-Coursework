@@ -13,8 +13,8 @@ import org.openimaj.feature.ByteFV;
 import org.openimaj.feature.local.list.LocalFeatureList;
 import org.openimaj.image.FImage;
 import org.openimaj.image.ImageUtilities;
-import org.openimaj.image.feature.local.engine.BasicGridSIFTEngine;
-import org.openimaj.image.feature.local.keypoints.Keypoint;
+import org.openimaj.image.feature.dense.gradient.dsift.ByteDSIFTKeypoint;
+import org.openimaj.image.feature.dense.gradient.dsift.DenseSIFT;
 import org.openimaj.ml.annotation.Annotated;
 import org.openimaj.ml.annotation.AnnotatedObject;
 import org.openimaj.ml.annotation.ScoredAnnotation;
@@ -68,12 +68,14 @@ public class DenseSift {
 		Set<ByteFV> vectors = new HashSet<ByteFV>();
 		for(FImage f : trainingImages)
 		{
-			BasicGridSIFTEngine engine = new BasicGridSIFTEngine(false);
+			DenseSIFT sifter = new DenseSIFT();
 
 			int sifted = 0;
-			LocalFeatureList<Keypoint> featurePoints = engine.findFeatures(f);
 			
-			for(Keypoint point : featurePoints){
+			sifter.analyseImage(f);
+			LocalFeatureList<ByteDSIFTKeypoint> featurePoints = sifter.getByteKeypoints();
+			
+			for(ByteDSIFTKeypoint point : featurePoints){
 
 				//build a sift descriptor, add to the list of sift descriptors
 				vectors.add(point.getFeatureVector());
@@ -83,7 +85,6 @@ public class DenseSift {
 				}
 			}
 		}
-
 
 		//System.out.println("Patching complete");
 		System.out.println(vectors.size() + " vectors created");
@@ -96,11 +97,11 @@ public class DenseSift {
 		 * KMeans calss produces a bag-of-visual-words feature using the patches produced by the PatchExtractor
 		 * */
 		ByteFV[] array = new ByteFV[vocabulary.size()];
-		ClassifierByteFV classifier = new ClassifierByteFV(Arrays.asList(vocabulary.toArray(array)));
-
+		ClassifierByteFV<DenseSIFT> classifier = new ClassifierByteFV<DenseSIFT>(Arrays.asList(vocabulary.toArray(array)),new DenseSIFT());
+    
 		classifier.train(trainingAnnotations);
-
-
+    
+    
 		for(Annotated<FImage,String> anno : testingAnnotations)
 		{
 			List<ScoredAnnotation<String>> annotations = classifier.annotate(anno.getObject());
