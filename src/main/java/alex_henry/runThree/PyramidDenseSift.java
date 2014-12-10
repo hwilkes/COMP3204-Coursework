@@ -7,18 +7,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.vfs2.FileSystemException;
-import org.openimaj.data.dataset.VFSListDataset;
 import org.openimaj.feature.ByteFV;
 import org.openimaj.feature.local.list.LocalFeatureList;
 import org.openimaj.image.FImage;
-import org.openimaj.image.ImageUtilities;
 import org.openimaj.image.feature.dense.gradient.dsift.ByteDSIFTKeypoint;
 import org.openimaj.image.feature.dense.gradient.dsift.DenseSIFT;
 import org.openimaj.image.feature.dense.gradient.dsift.PyramidDenseSIFT;
 import org.openimaj.ml.annotation.Annotated;
 import org.openimaj.ml.annotation.AnnotatedObject;
 import org.openimaj.ml.annotation.ScoredAnnotation;
+
+import alex_henry.common.ImageLoader;
+import alex_henry.common.TrainingData;
 
 public class PyramidDenseSift {
 	public static void main(String[] args)
@@ -29,18 +29,15 @@ public class PyramidDenseSift {
 		Set<FImage> trainingImages = new HashSet<FImage>();
 		List<Annotated<FImage,String>> trainingAnnotations = new ArrayList<Annotated<FImage,String>>();
 		File folder = new File("./images/training");
+		
+		TrainingData data = ImageLoader.loadTrainingImages();
+		
 		int subs = folder.listFiles().length - 1;
 		int subsAdded = 0;
-		for(File subFolder : folder.listFiles())
+		for(String className: data.getClassNames())
 		{
 
-			VFSListDataset<FImage> images;
-			try {
-				images = new VFSListDataset<FImage>(subFolder.getAbsolutePath(), ImageUtilities.FIMAGE_READER);
-			} catch (FileSystemException e) {
-				e.printStackTrace();
-				break;
-			}
+			ArrayList<FImage> images = new ArrayList<FImage>(data.getClass(className).values());
 
 			System.out.println(subsAdded++ + "/" + subs);
 
@@ -49,20 +46,18 @@ public class PyramidDenseSift {
 				toUse = images.size();
 			}
 
-			for(int i = 0; i < toUse; i++)
+			for(int i = 0; i < images.size(); i++)
 			{
-				FImage f = images.get(i);
-				trainingImages.add(f);
-				trainingAnnotations.add(new AnnotatedObject<FImage,String>(f,subFolder.getName()));
-			}
-
-			for(int i = toUse; i < images.size(); i++)
-			{
-				if(i == toUse)
-				{
-					testingAnnotations.add(new AnnotatedObject<FImage,String>(images.get(i),subFolder.getName()));
+				FImage image = images.get(i);
+				if(i < toUse){
+					trainingImages.add(image);
+					trainingAnnotations.add(new AnnotatedObject<FImage,String>(image,className));
+				} else if (i == toUse){
+					testingAnnotations.add(new AnnotatedObject<FImage,String>(image,className));
+				} else {
+					trainingAnnotations.add(new AnnotatedObject<FImage,String>(image,className));
 				}
-				trainingAnnotations.add(new AnnotatedObject<FImage,String>(images.get(i),subFolder.getName()));
+
 			}
 		}
 
@@ -102,10 +97,10 @@ public class PyramidDenseSift {
 		 * */
 		ByteFV[] array = new ByteFV[vocabulary.size()];
 		ClassifierByteFV<PyramidDenseSIFT<FImage>> classifier = new ClassifierByteFV<PyramidDenseSIFT<FImage>>(Arrays.asList(vocabulary.toArray(array)),new PyramidDenseSIFT<FImage>(new DenseSIFT(), 0, 16,32,64));
-		
+
 		classifier.train(trainingAnnotations);
-		
-		
+
+
 		for(Annotated<FImage,String> anno : testingAnnotations)
 		{
 			List<ScoredAnnotation<String>> annotations = classifier.annotate(anno.getObject());
