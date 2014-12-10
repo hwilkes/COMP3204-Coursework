@@ -59,9 +59,9 @@ public class KNearestClassifier {
 			}
 		}
 		
-		for(String s : classCount.keySet()){
-			System.out.println(s + " : " + classCount.get(s));
-		}
+//		for(String s : classCount.keySet()){
+//			System.out.println(s + " : " + classCount.get(s));
+//		}
 		
 		return targetClass;
 	}

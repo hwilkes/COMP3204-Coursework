@@ -19,8 +19,6 @@ import org.openimaj.ml.annotation.Annotated;
 import org.openimaj.ml.annotation.AnnotatedObject;
 import org.openimaj.ml.annotation.ScoredAnnotation;
 
-import alex_henry.runTwo.PatchExtractor;
-
 public class DenseSift {
 	public static void main(String[] args)
 	{
@@ -67,7 +65,6 @@ public class DenseSift {
 			}
 		}
 
-		PatchExtractor extractor = new PatchExtractor();
 		Set<ByteFV> vectors = new HashSet<ByteFV>();
 		for(FImage f : trainingImages)
 		{
