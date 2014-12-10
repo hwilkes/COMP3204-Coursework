@@ -53,7 +53,7 @@ public class ImageLoader {
 			images.put(f.getName(),img);
 		}
 		
-		return null;
+		return images;
 	}
 	
 }

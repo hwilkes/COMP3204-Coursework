@@ -45,6 +45,9 @@ public class RunTwoOutput {
 		Map<String,FImage> teImages = ImageLoader.loadTestingImages();
 		TrainingData trImages = ImageLoader.loadTrainingImages();
 		
+		if(teImages == null || trImages == null)
+			throw new NullPointerException();
+		
 		for(String className : trImages.getClassNames())
 		{
 			Map<String,FImage> classImages = trImages.getClass(className);
