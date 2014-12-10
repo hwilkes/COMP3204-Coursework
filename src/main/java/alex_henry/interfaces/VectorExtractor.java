@@ -1,4 +1,4 @@
-package alex_henry.runThree;
+package alex_henry.interfaces;
 
 import java.util.Set;
 

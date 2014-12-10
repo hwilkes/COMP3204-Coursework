@@ -8,6 +8,8 @@ import org.openimaj.ml.annotation.Annotated;
 import org.openimaj.ml.annotation.ScoredAnnotation;
 import org.openimaj.ml.annotation.linear.LiblinearAnnotator;
 
+import alex_henry.interfaces.Classifier;
+
 public class ClassifierByteFV implements Classifier<ByteFV> {
 
 	private LiblinearAnnotator<FImage,String> annotator;

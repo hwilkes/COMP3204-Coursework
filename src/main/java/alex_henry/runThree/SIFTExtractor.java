@@ -9,6 +9,8 @@ import org.openimaj.image.FImage;
 import org.openimaj.image.feature.local.engine.DoGSIFTEngine;
 import org.openimaj.image.feature.local.keypoints.Keypoint;
 
+import alex_henry.interfaces.VectorExtractor;
+
 public class SIFTExtractor implements VectorExtractor<ByteFV> {
 
 	@Override

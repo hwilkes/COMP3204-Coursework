@@ -6,6 +6,7 @@ import java.util.Set;
 import org.openimaj.feature.FloatFV;
 import org.openimaj.image.FImage;
 
+import alex_henry.interfaces.VectorExtractor;
 import alex_henry.runTwo.KMeansFloatFV;
 import alex_henry.runTwo.PatchExtractor;
 

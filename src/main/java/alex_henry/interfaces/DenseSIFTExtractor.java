@@ -1,4 +1,4 @@
-package alex_henry.runThree;
+package alex_henry.interfaces;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,6 +9,7 @@ import org.openimaj.image.FImage;
 import org.openimaj.image.feature.local.engine.BasicGridSIFTEngine;
 import org.openimaj.image.feature.local.keypoints.Keypoint;
 
+import alex_henry.runThree.KMeansByte;
 import alex_henry.runTwo.PatchExtractor;
 
 public class DenseSIFTExtractor implements VectorExtractor<ByteFV> {

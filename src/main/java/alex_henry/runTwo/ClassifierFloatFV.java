@@ -8,9 +8,9 @@ import org.openimaj.ml.annotation.Annotated;
 import org.openimaj.ml.annotation.ScoredAnnotation;
 import org.openimaj.ml.annotation.linear.LiblinearAnnotator;
 
-import alex_henry.runThree.Classifier;
+import alex_henry.interfaces.Classifier;
 
-public class ClassifierFloatFV implements Classifier {
+public class ClassifierFloatFV implements Classifier<FloatFV> {
 
 	private LiblinearAnnotator<FImage,String> annotator;
 	
