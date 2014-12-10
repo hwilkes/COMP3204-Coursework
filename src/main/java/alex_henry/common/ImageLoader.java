@@ -17,19 +17,21 @@ public class ImageLoader {
 		File folder = new File("./images/training");
 		//for each subfolder
 		for(File subFolder : folder.listFiles()){
-			Map<String,FImage> classImages = new HashMap<String,FImage>();
-			//load each image, mapped by file name
-			for(File f : subFolder.listFiles()){
-				FImage img;
-				try {
-					img = ImageUtilities.readF(f);
-				} catch (IOException e) {
-					break;
+			if(subFolder.isDirectory()){
+				Map<String,FImage> classImages = new HashMap<String,FImage>();
+				//load each image, mapped by file name
+				for(File f : subFolder.listFiles()){
+					FImage img;
+					try {
+						img = ImageUtilities.readF(f);
+					} catch (IOException e) {
+						break;
+					}
+					classImages.put(f.getName(),img);
 				}
-				classImages.put(f.getName(),img);
+				//add the class, mapped by class name
+				imageClasses.put(subFolder.getName(), classImages);
 			}
-			//add the class, mapped by class name
-			imageClasses.put(subFolder.getName(), classImages);
 		}
 		
 		
