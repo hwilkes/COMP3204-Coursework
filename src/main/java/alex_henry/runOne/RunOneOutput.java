@@ -31,7 +31,7 @@ public class RunOneOutput {
 
 		File trainingFolder = new File("./images/training");
 		File testingFolder = new File("./images/testing");
-		File output = new File("./Output/RunOne.txt");
+		File output = new File("./Output/run1.txt");
 		
 		Map<String,FImage> testingImages = new HashMap<String,FImage>();
 		for(File f : testingFolder.listFiles()){

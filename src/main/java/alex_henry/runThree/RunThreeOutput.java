@@ -57,43 +57,58 @@ public class RunThreeOutput {
 				e.printStackTrace();
 				break;
 			}
+			int toUse = 2;
+			if(toUse > trImages.size()){
+				toUse = trImages.size();
+			}
 
-			for(int i = 0; i < trImages.size(); i++)
+			for(int i = 0; i < toUse; i++)
 			{
+				FImage f = trImages.get(i);
+				trainingImages.add(f);
+				trainingAnnotations.add(new AnnotatedObject<FImage,String>(f,subFolder.getName()));
+			}
 
+			for(int i = toUse; i < trImages.size(); i++)
+			{
+//				if(i == toUse)
+//				{
+//					testingAnnotations.add(new AnnotatedObject<FImage,String>(trImages.get(i),subFolder.getName()));
+//				}
 				trainingAnnotations.add(new AnnotatedObject<FImage,String>(trImages.get(i),subFolder.getName()));
 			}
 			
 		}
+		
 		Set<ByteFV> vectors = new HashSet<ByteFV>();
-		PyramidDenseSIFT<FImage> pds = new PyramidDenseSIFT<FImage>(new DenseSIFT(), 0, 8,16,24,32);
 		for(FImage f : trainingImages)
 		{
-			pds.analyseImage(f);
+			DenseSIFT sifter = new DenseSIFT(16,16);
+
 			//int sifted = 0;
-			LocalFeatureList<ByteDSIFTKeypoint> featurePoints = pds.getByteKeypoints();
-
+			
+			sifter.analyseImage(f);
+			LocalFeatureList<ByteDSIFTKeypoint> featurePoints = sifter.getByteKeypoints();
+			
 			for(ByteDSIFTKeypoint point : featurePoints){
-
 				//build a sift descriptor, add to the list of sift descriptors
 				vectors.add(point.getFeatureVector());
-				/*sifted++;
-				if(sifted%100 == 0){
-					System.out.println(sifted + " images sifted");
-				}*/
 			}
+			/*sifted++;
+			if(sifted%100 == 0){
+				System.out.println(sifted + " images sifted");
+			}*/
 		}
-		
-		
 		
 
 		//figure out the k means
+		System.out.println(vectors.size());
 		Set<ByteFV> vocabulary = new KMeansByte().getMeans(k, vectors);
 		/*
 		 * KMeans class produces a bag-of-visual-words feature using the patches produced by the PatchExtractor
 		 * */
 		ByteFV[] array = new ByteFV[vocabulary.size()];
-		ClassifierByteFV<PyramidDenseSIFT<FImage>> classifier = new ClassifierByteFV<PyramidDenseSIFT<FImage>>(Arrays.asList(vocabulary.toArray(array)),new PyramidDenseSIFT<FImage>(new DenseSIFT(), 0, 8,16,24,32));
+		ClassifierByteFV<DenseSIFT> classifier = new ClassifierByteFV<DenseSIFT>(Arrays.asList(vocabulary.toArray(array)),new DenseSIFT(16,16));
 
 		classifier.train(trainingAnnotations);
 				
@@ -119,7 +134,7 @@ public class RunThreeOutput {
 		}
 		error = (error/count)*100;
 		System.out.println("Percentage Error: "+error);
-		File errOutput = new File("./Output/RunThreeError.txt");
+		File errOutput = new File("./Output/run3Error.txt");
 		FileWriter fEWriter = null;
 		try {
 			fEWriter = new FileWriter(errOutput);
@@ -129,7 +144,7 @@ public class RunThreeOutput {
 		PrintWriter pEWriter = new PrintWriter(fEWriter);
 		pEWriter.println("Percentage Error: "+error);
 		
-		File output = new File("./Output/RunThree.txt");
+		File output = new File("./Output/Run3.txt");
 		FileWriter fWriter = null;
 		try {
 			fWriter = new FileWriter(output);
@@ -151,8 +166,9 @@ public class RunThreeOutput {
 					confidence = anno.confidence;
 				}
 			}
+			System.out.println(key + " " + bestPrediction);
 			pWriter.println(key + " " + bestPrediction);
 		}
-		
+		pWriter.close();
 	}
 }

@@ -57,14 +57,26 @@ public class RunTwoOutput {
 			System.out.println(subsAdded++ + "/" + subs);
 			
 			
-			for(int i = 0; i < trImages.size(); i++)
+			int toUse = 2;
+			if(toUse > trImages.size()){
+				toUse = trImages.size();
+			}
+			
+			for(int i = 0; i < toUse; i++)
 			{
 				FImage f = trImages.get(i);
 				trainingImages.add(f);
 				trainingAnnotations.add(new AnnotatedObject<FImage,String>(f,subFolder.getName()));
 			}
 			
+			for(int i = toUse; i < trImages.size(); i++)
+			{
+				trainingAnnotations.add(new AnnotatedObject<FImage,String>(trImages.get(i),subFolder.getName()));
+			}
+			
 		}
+		System.out.println("Getting Vectors");
+		
 		//get ALL the vectors!
 		PatchExtractor extractor = new PatchExtractor();
 		Set<FloatFV> vectors = new HashSet<FloatFV>();
@@ -132,7 +144,7 @@ public class RunTwoOutput {
 		PrintWriter pEWriter = new PrintWriter(fEWriter);
 		pEWriter.println("Percentage Error: "+error);
 		
-		File output = new File("./Output/RunTwo.txt");
+		File output = new File("./Output/run2.txt");
 		FileWriter fWriter = null;
 		try {
 			fWriter = new FileWriter(output);
@@ -154,7 +166,9 @@ public class RunTwoOutput {
 					confidence = anno.confidence;
 				}
 			}
+			System.out.println(key + " " + bestPrediction);
 			pWriter.println(key + " " + bestPrediction);
 		}
+		pWriter.close();
 	}
 }
