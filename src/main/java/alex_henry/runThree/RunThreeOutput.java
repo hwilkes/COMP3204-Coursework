@@ -18,6 +18,7 @@ import org.openimaj.feature.ByteFV;
 import org.openimaj.feature.local.list.LocalFeatureList;
 import org.openimaj.image.FImage;
 import org.openimaj.image.ImageUtilities;
+import org.openimaj.image.feature.dense.gradient.dsift.ByteDSIFTKeypoint;
 import org.openimaj.image.feature.dense.gradient.dsift.DenseSIFT;
 import org.openimaj.image.feature.dense.gradient.dsift.PyramidDenseSIFT;
 import org.openimaj.image.feature.local.engine.BasicGridSIFTEngine;
@@ -64,18 +65,22 @@ public class RunThreeOutput {
 			}
 			
 		}
-		//get ALL the vectors!
 		Set<ByteFV> vectors = new HashSet<ByteFV>();
+		PyramidDenseSIFT<FImage> pds = new PyramidDenseSIFT<FImage>(new DenseSIFT(), 0, 8,16,24,32);
 		for(FImage f : trainingImages)
 		{
-			BasicGridSIFTEngine engine = new BasicGridSIFTEngine(false);
+			pds.analyseImage(f);
+			//int sifted = 0;
+			LocalFeatureList<ByteDSIFTKeypoint> featurePoints = pds.getByteKeypoints();
 
-			LocalFeatureList<Keypoint> featurePoints = engine.findFeatures(f);
-			
-			for(Keypoint point : featurePoints){
+			for(ByteDSIFTKeypoint point : featurePoints){
 
 				//build a sift descriptor, add to the list of sift descriptors
 				vectors.add(point.getFeatureVector());
+				/*sifted++;
+				if(sifted%100 == 0){
+					System.out.println(sifted + " images sifted");
+				}*/
 			}
 		}
 		
@@ -114,6 +119,15 @@ public class RunThreeOutput {
 		}
 		error = (error/count)*100;
 		System.out.println("Percentage Error: "+error);
+		File errOutput = new File("./Output/RunThreeError.txt");
+		FileWriter fEWriter = null;
+		try {
+			fEWriter = new FileWriter(errOutput);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		PrintWriter pEWriter = new PrintWriter(fEWriter);
+		pEWriter.println("Percentage Error: "+error);
 		
 		File output = new File("./Output/RunThree.txt");
 		FileWriter fWriter = null;
