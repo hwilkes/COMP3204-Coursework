@@ -1,6 +1,9 @@
 package alex_henry.runThree;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -19,6 +22,7 @@ import org.openimaj.ml.annotation.Annotated;
 import org.openimaj.ml.annotation.AnnotatedObject;
 import org.openimaj.ml.annotation.ScoredAnnotation;
 
+import alex_henry.interfaces.DenseSIFTExtractor;
 import alex_henry.runTwo.ClassifierFloatFV;
 
 public class PredictionWriter {
@@ -129,6 +133,18 @@ public class PredictionWriter {
 				siftPredictions.add(siftClass);
 				dsiftPredictions.add(dsiftClass);
 			}
+			
+			File linearOutput = new File("./Output/linearTestingPredictions.txt");
+			File siftOutput = new File("./Output/siftTestingPredictions.txt");
+			File dsiftOutput = new File("./Output/dsiftTestingPredictions.txt");
+
+			
+			for(Annotated<FImage,String> anno : linearPredictions)
+			{
+				
+			}
+			for(Annotated<FImage,String> anno : siftPredictions){}
+			for(Annotated<FImage,String> anno : dsiftPredictions){}
 	    }
 	}
 }
