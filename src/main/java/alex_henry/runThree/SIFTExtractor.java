@@ -11,6 +11,10 @@ import org.openimaj.image.feature.local.keypoints.Keypoint;
 
 import alex_henry.interfaces.VectorExtractor;
 
+/*
+ * Implementation of VectorExtractor for getting vocabulary for images based on SIFT feature vectors of image
+ * */
+
 public class SIFTExtractor implements VectorExtractor<ByteFV> {
 
 	@Override

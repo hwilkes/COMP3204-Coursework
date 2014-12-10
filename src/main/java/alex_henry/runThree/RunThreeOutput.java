@@ -27,9 +27,17 @@ import org.openimaj.ml.annotation.Annotated;
 import org.openimaj.ml.annotation.AnnotatedObject;
 import org.openimaj.ml.annotation.ScoredAnnotation;
 
+/*
+ * Based on code from alex_henry.runThree.DenseSift
+ * 
+ * */
+
 public class RunThreeOutput {
 	public static void main(String[] args)
 	{
+		/*
+		 * Number of means to be generated for K-Means vocabulary
+		 * */		
 		int k = 500;
 	
 		Set<FImage> trainingImages = new HashSet<FImage>();
@@ -37,6 +45,7 @@ public class RunThreeOutput {
 		File testingFolder = new File("./images/testing");
 		File trainingFolder = new File("./images/training");
 		
+		//map of training set to filenames
 		Map<String,FImage> teImages = new HashMap<String,FImage>();
 		for(File f : testingFolder.listFiles()){
 			try {
@@ -57,6 +66,8 @@ public class RunThreeOutput {
 				e.printStackTrace();
 				break;
 			}
+			
+			//Two images from each folder in the training set are used for generating the vocabulary
 			int toUse = 2;
 			if(toUse > trImages.size()){
 				toUse = trImages.size();
@@ -109,9 +120,12 @@ public class RunThreeOutput {
 		 * */
 		ByteFV[] array = new ByteFV[vocabulary.size()];
 		ClassifierByteFV<DenseSIFT> classifier = new ClassifierByteFV<DenseSIFT>(Arrays.asList(vocabulary.toArray(array)),new DenseSIFT(16,16));
-
+		//Training using entire training set
 		classifier.train(trainingAnnotations);
 				
+		/*
+		 * Calculate error from applying classifier to training set
+		 * */
 		double error = 0;
 		int count = 0;
 		for(Annotated<FImage,String> f : trainingAnnotations)
@@ -120,6 +134,7 @@ public class RunThreeOutput {
 			float confidence = 0f; String bestPrediction = null;
 			for(ScoredAnnotation<String> anno : predictions)
 			{
+				//get highest confidence to get prediction
 				if(anno.confidence > confidence)
 				{
 					bestPrediction = anno.annotation;
@@ -132,8 +147,12 @@ public class RunThreeOutput {
 			}
 			count++;
 		}
+		//calculate error
 		error = (error/count)*100;
 		System.out.println("Percentage Error: "+error);
+		
+		
+		//Setup to write error to file
 		File errOutput = new File("./Output/run3Error.txt");
 		FileWriter fEWriter = null;
 		try {
@@ -144,7 +163,8 @@ public class RunThreeOutput {
 		PrintWriter pEWriter = new PrintWriter(fEWriter);
 		pEWriter.println("Percentage Error: "+error);
 		
-		File output = new File("./Output/Run3.txt");
+		//Setup to write results to file
+		File output = new File("./Output/run3.txt");
 		FileWriter fWriter = null;
 		try {
 			fWriter = new FileWriter(output);
@@ -160,6 +180,7 @@ public class RunThreeOutput {
 			float confidence = 0f; String bestPrediction = null;
 			for(ScoredAnnotation<String> anno : predictions)
 			{
+				//Finds prediction with best confidence
 				if(anno.confidence > confidence)
 				{
 					bestPrediction = anno.annotation;

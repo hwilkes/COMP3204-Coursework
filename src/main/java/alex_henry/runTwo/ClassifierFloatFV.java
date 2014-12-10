@@ -10,6 +10,11 @@ import org.openimaj.ml.annotation.linear.LiblinearAnnotator;
 
 import alex_henry.interfaces.Classifier;
 
+/*
+ * Implementation of Classifier method for FloatFV feature vector
+ * Uses LiblinearAnnotator to generate classifiers
+ * */
+
 public class ClassifierFloatFV implements Classifier<FloatFV> {
 
 	private LiblinearAnnotator<FImage,String> annotator;

@@ -15,6 +15,12 @@ import org.openimaj.feature.ByteFVComparison;
 import org.openimaj.util.function.Operation;
 import org.openimaj.util.parallel.Parallel;
 
+import alex_henry.interfaces.KMeans;
+
+/*
+ * Implementation of KMeans interface for ByteFV feature vector
+ * */
+
 public class KMeansByte implements KMeans<ByteFV>
 {
 
@@ -22,16 +28,11 @@ public class KMeansByte implements KMeans<ByteFV>
 	
 	public Set<ByteFV> getMeans(final int k, Set<ByteFV> vectors)
 	{
-		if(k > vectors.size())
+		if(k > vectors.size()) //Must have enough vectors to produce K sized vocabulary
 			throw new IllegalArgumentException("K is greater than vector size");
 
 		//assume k means to using existing items
 		Set<ByteFV> means = new HashSet<ByteFV>();
-//		Iterator<ByteFV> iter = vectors.iterator();
-//		for(int i = 0; i < k; i++)
-//		{
-//			means.add(iter.next());
-//		}
 		ByteFV[] byteVectors = new ByteFV[vectors.size()];
 		Vector<ByteFV> vec = new Vector<ByteFV>(Arrays.asList(vectors.toArray(byteVectors)));
 		
@@ -92,6 +93,7 @@ public class KMeansByte implements KMeans<ByteFV>
 
 			final Set<ByteFV> updatedMeans = Collections.synchronizedSet(new HashSet<ByteFV>());
 			//final int updated = 0;
+			//Each parallel loop gets updated means for one vector
 			Parallel.forEach(means,new Operation<ByteFV>(){
 
 						@Override

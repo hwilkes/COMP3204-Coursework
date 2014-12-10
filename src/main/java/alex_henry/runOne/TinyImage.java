@@ -12,11 +12,20 @@ public class TinyImage  {
 	protected FImage square;
 
 	
+	/*
+	 *	Takes an FImage and new x and y lengths as arguments 
+	 *	Resizes image around central coordinate of image to size given by arguments
+	 *	Image height and width have to be made equal
+	 */
+	
 	public TinyImage(FImage original, int x, int y)
 	{
 		this.original = original;
 		float[][] newPixels;
 
+		/*
+		 * If image is taller than it is wide, drops equivalent number of rows of pixels off top
+		 * */
 		if(original.height > original.width)
 		{
 			newPixels = new float[original.width][original.width];
@@ -29,7 +38,9 @@ public class TinyImage  {
 				newPixels[i-topDrop] = original.pixels[i].clone();
 			}
 
-		}
+		}/*
+		 * If image is wider than it is tall, drops equivalent number of columns of pixels off left of image
+		 * */
 		else if(original.height < original.width)
 		{
 			newPixels = new float[original.height][original.height];
@@ -53,7 +64,7 @@ public class TinyImage  {
 		}
 		
 		square = new FImage(newPixels);
-		processed = ResizeProcessor.resample(new FImage(newPixels), x, y);
+		processed = ResizeProcessor.resample(new FImage(newPixels), x, y); //Uses ResizeProcessor to resize image
 
 		double sum = 0.0;
 		float smallest = Float.MAX_VALUE;
@@ -74,6 +85,7 @@ public class TinyImage  {
 				}
 			}
 		}
+		//Calculate mean and scale from smallest, biggest and sum of pixel values
 		float scale = 1/(biggest - smallest);
 		float mean = (float)(sum/(processed.width*processed.height));
 		/*
@@ -92,7 +104,9 @@ public class TinyImage  {
 		
 		
 	}
-	
+	/*
+	 * Returns feature vector for TinyImage
+	 * */
 	public FloatFV getVector()
 	{
 		float[] v = new float[processed.width*processed.height];

@@ -8,10 +8,15 @@ import java.util.Set;
 import org.openimaj.feature.FloatFV;
 import org.openimaj.image.FImage;
 
+/*
+ * Class for extracting set of patch samples from image, return patches in set
+ * Patches are normalised before they are returned
+ * */
+
 public class PatchExtractor {
 	
-	protected int size;
-	protected int sampleSize;
+	protected int size; //Size of patches produce (size X size)
+	protected int sampleSize; //Distance between samples
 	
 	public PatchExtractor(int size, int sampleSize)
 	{
@@ -25,6 +30,7 @@ public class PatchExtractor {
 		sampleSize = 4;
 	}
 	
+	//Returns unordered set of patches for image
 	public Set<FImage> getPatches(FImage image)
 	{
 		Set<FImage> patches = new HashSet<FImage>();
@@ -33,14 +39,15 @@ public class PatchExtractor {
 		{
 			for(int y = 0; y < image.height-size; y += sampleSize)
 			{
-				FImage patch = image.extractROI(x, y, size, size);
+				FImage patch = image.extractROI(x, y, size, size); //Extracts patch from image
 				
-				patches.add(patch.normalise());
+				patches.add(patch.normalise()); //Normalising patch
 			}
 		}
 		return patches;
 	} 
 	
+	//Similar as above method, return patches in an ordered List of Columns
 	public List<List<FImage>> getOrderedPatches(FImage image)
 	{
 		List<List<FImage>> patches = new ArrayList<List<FImage>>();
@@ -61,6 +68,9 @@ public class PatchExtractor {
 		return patches;
 	}
 	
+	/*
+	 * Returns FloatFV feature vector for patch
+	 * */
 	public FloatFV getVector(FImage patch)
 	{
 		float[] v = new float[patch.width*patch.height];

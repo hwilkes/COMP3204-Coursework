@@ -21,6 +21,10 @@ import alex_henry.common.ImageLoader;
 import alex_henry.common.TrainingData;
 
 public class PyramidDenseSift {
+	/*
+	 * Classifier test for Dense Sift with a Gaussian Pyramid
+	 * */
+	
 	public static void main(String[] args)
 	{
 

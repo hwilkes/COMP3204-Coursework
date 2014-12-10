@@ -5,6 +5,10 @@ import java.util.Comparator;
 import org.openimaj.feature.FloatFV;
 import org.openimaj.feature.FloatFVComparison;
 
+/*
+ *  Compares FloatFV feature vectors using euclidean distance
+ * */
+
 public class FloatFVComparator implements Comparator<FloatFV>{
 
 	FloatFV target;

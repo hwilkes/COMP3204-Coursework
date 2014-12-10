@@ -18,21 +18,27 @@ import org.openimaj.image.ImageUtilities;
 import org.openimaj.ml.annotation.Annotated;
 import org.openimaj.ml.annotation.AnnotatedObject;
 
+/*
+ * Based on code from alex_henry.runOne.App
+ * */
+
 public class RunOneOutput {
 	
+	//value of nearest neighbours used by KMeans classifier
 	static final int kNearestNeighbours = 29;
 	
 	public static void main(String[] args){
 		
 		KNearestClassifier classifier = new KNearestClassifier();
-		//int K = 500; //TODO set by argument?
 	
 		List<Annotated<FImage,String>> trainingAnnotations = new ArrayList<Annotated<FImage,String>>();
 
 		File trainingFolder = new File("./images/training");
 		File testingFolder = new File("./images/testing");
 		File output = new File("./Output/run1.txt");
-		
+		/*
+		*mapping test set images to their filenames
+		*/
 		Map<String,FImage> testingImages = new HashMap<String,FImage>();
 		for(File f : testingFolder.listFiles()){
 			try {
@@ -52,17 +58,23 @@ public class RunOneOutput {
 				e.printStackTrace();
 				break;
 			}
+			
 			for(FImage f : images){
 				trainingAnnotations.add(new AnnotatedObject<FImage,String>(f,subFolder.getName()));
 			}
+			//Generate TinyImages for each image in training set
 			ListDataset<TinyImage> tinys = new ListBackedDataset<TinyImage>();
 			for(FImage f : images)
 			{
 				tinys.add(new TinyImage(f,16,16));
 			}
+			//train classifier with TinyImages
 			classifier.addClassValues(tinys, subFolder.getName());
 		}
 
+		/*
+		 * Calculate error from applying classifier to training set
+		 * */
 		double error = 0;
 		int count = 0;
 		for(Annotated<FImage,String> f : trainingAnnotations)
@@ -77,6 +89,10 @@ public class RunOneOutput {
 		}
 		error = (error/count)*100;
 		System.out.println("Percentage Error: "+error);
+		
+		/*
+		 * Write error to file
+		 * */
 		File errOutput = new File("./Output/RunOneError.txt");
 		FileWriter fEWriter = null;
 		try {
@@ -96,6 +112,9 @@ public class RunOneOutput {
 		}
 		PrintWriter pWriter = new PrintWriter(fWriter);
 		
+		/*
+		 * Get classifications for test set and write to file
+		 * */
 		for(String key : testingImages.keySet())
 		{
 			String prediction = classifier.classify(testingImages.get(key), kNearestNeighbours);
