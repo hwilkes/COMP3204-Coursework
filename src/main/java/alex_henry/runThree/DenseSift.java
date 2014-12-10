@@ -93,7 +93,7 @@ public class DenseSift {
 		Set<ByteFV> vocabulary = new KMeansByte().getMeans(k, vectors);
 		System.out.println("I did it!");
 		/*
-		 * KMeans calss produces a bag-of-visual-words feature using the patches produced by the PatchExtractor
+		 * KMeans class produces a bag-of-visual-words feature using the patches produced by the PatchExtractor
 		 * */
 		ByteFV[] array = new ByteFV[vocabulary.size()];
 		ClassifierByteFV<DenseSIFT> classifier = new ClassifierByteFV<DenseSIFT>(Arrays.asList(vocabulary.toArray(array)),new DenseSIFT(16,16));
