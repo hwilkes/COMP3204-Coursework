@@ -10,6 +10,8 @@ import org.openimaj.image.FImage;
 import org.openimaj.image.feature.dense.gradient.dsift.AbstractDenseSIFT;
 import org.openimaj.image.feature.dense.gradient.dsift.ByteDSIFTKeypoint;
 
+import alex_henry.interfaces.BOVWExtractor;
+
 
 public class BOVWExtractorByte<SIFT extends AbstractDenseSIFT<FImage>> implements BOVWExtractor<SparseIntFV> {
 

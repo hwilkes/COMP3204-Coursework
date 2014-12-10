@@ -11,6 +11,11 @@ import org.openimaj.ml.annotation.linear.LiblinearAnnotator;
 
 import alex_henry.interfaces.Classifier;
 
+/*
+ * Implementation of Classifier method for ByteFV feature vector
+ * Uses LiblinearAnnotator to generate classifiers
+ * */
+
 public class ClassifierByteFV<SIFT extends AbstractDenseSIFT<FImage>> implements Classifier<ByteFV> {
 
 	private LiblinearAnnotator<FImage,String> annotator;

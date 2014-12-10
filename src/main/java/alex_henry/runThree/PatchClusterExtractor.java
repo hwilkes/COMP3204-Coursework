@@ -10,6 +10,8 @@ import alex_henry.interfaces.VectorExtractor;
 import alex_henry.runTwo.KMeansFloatFV;
 import alex_henry.runTwo.PatchExtractor;
 
+
+
 public class PatchClusterExtractor implements VectorExtractor<FloatFV> {
 
 	@Override

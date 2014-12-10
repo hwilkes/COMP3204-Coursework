@@ -21,6 +21,10 @@ import org.openimaj.ml.annotation.AnnotatedObject;
 import org.openimaj.ml.annotation.ScoredAnnotation;
 
 public class PyramidDenseSift {
+	/*
+	 * Classifier test for Dense Sift with a Gaussian Pyramid
+	 * */
+	
 	public static void main(String[] args)
 	{
 

@@ -21,9 +21,16 @@ import org.openimaj.ml.annotation.Annotated;
 import org.openimaj.ml.annotation.AnnotatedObject;
 import org.openimaj.ml.annotation.ScoredAnnotation;
 
+/*
+ * Based on code from alex_henry.runTwo.AppTwo
+ * */
 public class RunTwoOutput {
 
 	public static void main(String[] args){
+		
+		/*
+		 * Number of means to be generated for K-Means vocabulary
+		 * */
 		int k = 500;
 		
 		Set<FImage> trainingImages = new HashSet<FImage>();
@@ -33,6 +40,9 @@ public class RunTwoOutput {
 		int subs = trainingFolder.listFiles().length - 1;
 		int subsAdded = 0;
 		
+		/*
+		 * Map training image set to filenames
+		 * */
 		Map<String,FImage> teImages = new HashMap<String,FImage>();
 		for(File f : testingFolder.listFiles()){
 			try {
@@ -45,7 +55,6 @@ public class RunTwoOutput {
 	
 		for(File subFolder : trainingFolder.listFiles())
 		{
-			
 			VFSListDataset<FImage> trImages;
 			try {
 				trImages = new VFSListDataset<FImage>(subFolder.getAbsolutePath(), ImageUtilities.FIMAGE_READER);
@@ -56,12 +65,17 @@ public class RunTwoOutput {
 			
 			System.out.println(subsAdded++ + "/" + subs);
 			
-			
+			/*
+			*Number of images to user. For generating the vocabulary only 2 images from each training folder are used
+			*/
 			int toUse = 2;
 			if(toUse > trImages.size()){
 				toUse = trImages.size();
 			}
 			
+			/*
+			 * Add remaining training images to trainingImages and trainingAnnotations
+			 * */
 			for(int i = 0; i < toUse; i++)
 			{
 				FImage f = trImages.get(i);
@@ -85,7 +99,7 @@ public class RunTwoOutput {
 		for(FImage f : trainingImages){
 			for(FImage patch : extractor.getPatches(f)){
 				FloatFV vector = extractor.getVector(patch);
-				if(AppTwo.isNaNy(vector)){
+				if(AppTwo.isNaNy(vector)){	//Some patches generate feature vectors with NaN values. These need to be tested for and removed
 					nanVectors++;
 				} else {
 					vectors.add(vector);
@@ -109,9 +123,14 @@ public class RunTwoOutput {
 		 * */
 		FloatFV[] array = new FloatFV[vocabulary.size()];
 		ClassifierFloatFV classifier = new ClassifierFloatFV(Arrays.asList(vocabulary.toArray(array)));
-		
+		/*
+		 * Training classifier using training images
+		 * */
 		classifier.train(trainingAnnotations);
 			
+		/*
+		 * Calculate percentage error in predictions for training images
+		 * */
 		double error = 0;
 		int count = 0;
 		for(Annotated<FImage,String> f : trainingAnnotations)
@@ -120,6 +139,9 @@ public class RunTwoOutput {
 			float confidence = 0f; String bestPrediction = null;
 			for(ScoredAnnotation<String> anno : predictions)
 			{
+				/*
+				 * Best prediction is prediction with highest confidence
+				 * */
 				if(anno.confidence > confidence)
 				{
 					bestPrediction = anno.annotation;
@@ -132,6 +154,10 @@ public class RunTwoOutput {
 			}
 			count++;
 		}
+		
+		/*
+		 * Calculate error for training set predictions and write to file
+		 * */
 		error = (error/count)*100;
 		System.out.println("Percentage Error: "+error);
 		File errOutput = new File("./Output/RunTwoError.txt");
@@ -143,6 +169,7 @@ public class RunTwoOutput {
 		}
 		PrintWriter pEWriter = new PrintWriter(fEWriter);
 		pEWriter.println("Percentage Error: "+error);
+		
 		
 		File output = new File("./Output/run2.txt");
 		FileWriter fWriter = null;
@@ -160,6 +187,9 @@ public class RunTwoOutput {
 			float confidence = 0f; String bestPrediction = null;
 			for(ScoredAnnotation<String> anno : predictions)
 			{
+				/*
+				 * Get best prediction based on confidence
+				 * */
 				if(anno.confidence > confidence)
 				{
 					bestPrediction = anno.annotation;

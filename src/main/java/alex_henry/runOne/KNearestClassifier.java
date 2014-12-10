@@ -18,6 +18,7 @@ public class KNearestClassifier {
 		classes = new HashMap<FloatFV,String>();
 	}
 
+	//kValue - number of nearest neighbours to compare feature vector to
 	public String classify(FImage image,int kValue)
 	{
 		TinyImage tiny = new TinyImage(image,16,16);
@@ -66,6 +67,7 @@ public class KNearestClassifier {
 		return targetClass;
 	}
 
+	//Used to train classifier
 	public void addClassValues(ListDataset<TinyImage> group,String setName)
 	{
 		for(TinyImage i : group){

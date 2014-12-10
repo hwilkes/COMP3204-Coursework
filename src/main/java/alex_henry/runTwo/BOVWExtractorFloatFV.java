@@ -8,8 +8,11 @@ import org.openimaj.feature.FloatFVComparison;
 import org.openimaj.feature.SparseFloatFV;
 import org.openimaj.image.FImage;
 
-import alex_henry.runThree.BOVWExtractor;
+import alex_henry.interfaces.BOVWExtractor;
 
+/*
+ * Implementation of BOWVExtractor for extracting FloatFV bag-of-visual-word features
+ * */
 
 public class BOVWExtractorFloatFV implements BOVWExtractor<SparseFloatFV> {
 
@@ -24,6 +27,7 @@ public class BOVWExtractorFloatFV implements BOVWExtractor<SparseFloatFV> {
 	
 	@Override
 	public SparseFloatFV extractFeature(FImage object) {
+		//initialise word counts
 		float[] wordCounts = new float[dictionary.size()];
 		for(int i = 0; i < wordCounts.length; i++)
 		{
@@ -31,16 +35,17 @@ public class BOVWExtractorFloatFV implements BOVWExtractor<SparseFloatFV> {
 		}
 		
 		Set<FImage> patches = extractor.getPatches(object);
+		//Find nearest word for each patch in image
 		for(FImage patch : patches)
 		{
 			FloatFV vector = extractor.getVector(patch);
-			if(AppTwo.isNaNy(vector))
+			if(AppTwo.isNaNy(vector))//Ignore vectors with NaN values
 			{
 				continue;
 			}
 			FloatFV nearestWord = null;
 			double nearestDistance = Double.MAX_VALUE;
-			
+			//Find word is shortest distance to patch
 			for(FloatFV word : dictionary){
 				double distance = FloatFVComparison.EUCLIDEAN.compare(word, vector);
 				if(distance < nearestDistance){
@@ -49,6 +54,7 @@ public class BOVWExtractorFloatFV implements BOVWExtractor<SparseFloatFV> {
 				}
 			}
 			
+			//Increase word count for nearest word to vector
 			wordCounts[dictionary.indexOf(nearestWord)] ++;
 			
 		}

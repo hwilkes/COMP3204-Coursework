@@ -14,7 +14,7 @@ import org.openimaj.feature.FloatFVComparison;
 import org.openimaj.util.function.Operation;
 import org.openimaj.util.parallel.Parallel;
 
-import alex_henry.runThree.KMeans;
+import alex_henry.interfaces.KMeans;
 
 public class KMeansFloatFV implements KMeans<FloatFV> 
 {
