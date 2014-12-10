@@ -21,9 +21,12 @@ public class KNearestClassifier {
 	public String classify(FImage image,int kValue)
 	{
 		TinyImage tiny = new TinyImage(image,16,16);
-
+		return classify(tiny,kValue);
+	}
+	
+	public String classify(TinyImage tiny,int kValue){
+		
 		FloatFV v = tiny.getVector();
-
 		PriorityQueue<FloatFV> q = new PriorityQueue<FloatFV>(1,new VectorComparison(v));
 
 		for(FloatFV vector : classes.keySet())
@@ -72,6 +75,10 @@ public class KNearestClassifier {
 			classes.put(i.getVector(), setName);
 		}
 
+	}
+	
+	public void addClassValue(TinyImage img, String setName){
+		classes.put(img.getVector(), setName);
 	}
 
 	class VectorComparison implements Comparator<FloatFV>{
