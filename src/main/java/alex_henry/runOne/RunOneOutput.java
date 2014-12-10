@@ -1,8 +1,11 @@
 package alex_henry.runOne;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.vfs2.FileSystemException;
 import org.openimaj.data.dataset.ListBackedDataset;
@@ -13,30 +16,27 @@ import org.openimaj.image.ImageUtilities;
 
 public class RunOneOutput {
 	
+	static final int kNearestNeighbours = 29;
+	
 	public static void main(String[] args){
 		
 		KNearestClassifier classifier = new KNearestClassifier();
-		int K = 9; //TODO set by argument?
+		int K = 500; //TODO set by argument?
 	
 		File trainingFolder = new File("./images/training");
 		File testingFolder = new File("./images/testing");
+		File output = new File("./Output/RunOne.txt");
 		
-		List<String> fileNames = new ArrayList<String>();
-		
-		VFSListDataset<FImage> testingImages;
-		try {
-			testingImages = new VFSListDataset<FImage>(testingFolder.getAbsolutePath(), ImageUtilities.FIMAGE_READER);
-			
-		} catch (FileSystemException e) {
-			e.printStackTrace();
-			return;
+		Map<String,FImage> testingImages = new HashMap<String,FImage>();
+		for(File f : testingFolder.listFiles()){
+			try {
+				testingImages.put(f.getName(),ImageUtilities.readF(f));
+			} catch (IOException e) {
+				System.err.println("Unable to read image "+f.getName());
+				
+			}
 		}
-		for(File f : testingFolder.listFiles())
-		{
-			fileNames.add(f.getName());
-		}
-		
-		
+
 		for(File subFolder : trainingFolder.listFiles())
 		{
 			VFSListDataset<FImage> images;
@@ -52,14 +52,20 @@ public class RunOneOutput {
 				tinys.add(new TinyImage(f,16,16));
 			}
 			classifier.addClassValues(tinys, subFolder.getName());
-	
 		}
 
-		for(int i = 0; i < testingImages.size(); i++)
+		FileWriter fWriter = null;
+		try {
+			fWriter = new FileWriter(output);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		PrintWriter pWriter = new PrintWriter(fWriter);
+		
+		for(String key : testingImages.keySet())
 		{
-			String prediction = classifier.classify(testingImages.get(i), K);
-			System.out.println(fileNames.get(i)+" "+prediction);
-
+			String prediction = classifier.classify(testingImages.get(key), kNearestNeighbours);
+			pWriter.println(key +" "+prediction);
 		}
 	}
 }
