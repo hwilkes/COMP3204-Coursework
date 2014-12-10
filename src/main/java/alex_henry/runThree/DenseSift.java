@@ -68,22 +68,21 @@ public class DenseSift {
 		Set<ByteFV> vectors = new HashSet<ByteFV>();
 		for(FImage f : trainingImages)
 		{
-			DenseSIFT sifter = new DenseSIFT();
+			DenseSIFT sifter = new DenseSIFT(16,16);
 
-			int sifted = 0;
+			//int sifted = 0;
 			
 			sifter.analyseImage(f);
 			LocalFeatureList<ByteDSIFTKeypoint> featurePoints = sifter.getByteKeypoints();
 			
 			for(ByteDSIFTKeypoint point : featurePoints){
-
 				//build a sift descriptor, add to the list of sift descriptors
 				vectors.add(point.getFeatureVector());
-				sifted++;
-				if(sifted%100 == 0){
-					System.out.println(sifted + " images sifted");
-				}
 			}
+			/*sifted++;
+			if(sifted%100 == 0){
+				System.out.println(sifted + " images sifted");
+			}*/
 		}
 
 		//System.out.println("Patching complete");
@@ -97,11 +96,11 @@ public class DenseSift {
 		 * KMeans calss produces a bag-of-visual-words feature using the patches produced by the PatchExtractor
 		 * */
 		ByteFV[] array = new ByteFV[vocabulary.size()];
-		ClassifierByteFV<DenseSIFT> classifier = new ClassifierByteFV<DenseSIFT>(Arrays.asList(vocabulary.toArray(array)),new DenseSIFT());
-    
+		ClassifierByteFV<DenseSIFT> classifier = new ClassifierByteFV<DenseSIFT>(Arrays.asList(vocabulary.toArray(array)),new DenseSIFT(16,16));
+        
 		classifier.train(trainingAnnotations);
-    
-    
+        
+        
 		for(Annotated<FImage,String> anno : testingAnnotations)
 		{
 			List<ScoredAnnotation<String>> annotations = classifier.annotate(anno.getObject());
