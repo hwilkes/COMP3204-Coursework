@@ -8,12 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.vfs2.FileSystemException;
 import org.openimaj.data.dataset.ListBackedDataset;
 import org.openimaj.data.dataset.ListDataset;
-import org.openimaj.data.dataset.VFSListDataset;
 import org.openimaj.image.FImage;
-import org.openimaj.image.ImageUtilities;
 import org.openimaj.ml.annotation.Annotated;
 import org.openimaj.ml.annotation.AnnotatedObject;
 
@@ -35,8 +32,6 @@ public class RunOneOutput {
 	
 		List<Annotated<FImage,String>> trainingAnnotations = new ArrayList<Annotated<FImage,String>>();
 
-		File trainingFolder = new File("./images/training");
-		File testingFolder = new File("./images/testing");
 		File output = new File("./Output/run1.txt");
 		/*
 		*mapping test set images to their filenames

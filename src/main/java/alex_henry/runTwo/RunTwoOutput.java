@@ -36,8 +36,6 @@ public class RunTwoOutput {
 		
 		Set<FImage> trainingImages = new HashSet<FImage>();
 		List<Annotated<FImage,String>> trainingAnnotations = new ArrayList<Annotated<FImage,String>>();
-		File testingFolder = new File("./images/testing");
-		File trainingFolder = new File("./images/training");
 		
 		/*
 		 * Map training image set to filenames
