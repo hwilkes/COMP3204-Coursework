@@ -17,12 +17,12 @@ public class ClassifierByteFV<SIFT extends AbstractDenseSIFT<FImage>> implements
 	
 	public ClassifierByteFV(List<ByteFV> dictionary, SIFT method)
 	{
-		BOVWExtractorByte extractor = new BOVWExtractorByte<SIFT>(dictionary,method);
+		BOVWExtractorByte<SIFT> extractor = new BOVWExtractorByte<SIFT>(dictionary,method);
 		annotator = new LiblinearAnnotator<FImage, String>(extractor,LiblinearAnnotator.Mode.MULTICLASS,
 				de.bwaldvogel.liblinear.SolverType.MCSVM_CS,1.0,1.0);
 	}
 	
-	public ClassifierByteFV(BOVWExtractorByte extractor)
+	public ClassifierByteFV(BOVWExtractorByte<SIFT> extractor)
 	{
 		annotator = new LiblinearAnnotator<FImage, String>(extractor,LiblinearAnnotator.Mode.MULTICLASS,
 				de.bwaldvogel.liblinear.SolverType.MCSVM_CS,1.0,1.0);

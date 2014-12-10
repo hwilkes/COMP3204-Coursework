@@ -10,13 +10,11 @@ import org.openimaj.image.feature.local.engine.BasicGridSIFTEngine;
 import org.openimaj.image.feature.local.keypoints.Keypoint;
 
 import alex_henry.runThree.KMeansByte;
-import alex_henry.runTwo.PatchExtractor;
 
 public class DenseSIFTExtractor implements VectorExtractor<ByteFV> {
 
 	@Override
 	public Set<ByteFV> getVectors(Set<FImage> images) {
-		PatchExtractor extractor = new PatchExtractor();
 		Set<ByteFV> vectors = new HashSet<ByteFV>();
 		for(FImage f : images)
 		{

@@ -33,7 +33,9 @@ public class KMeansFloatFV implements KMeans<FloatFV>
 //		{
 //			means.add(iter.next());
 //		}
-		Vector vec = new Vector(Arrays.asList(vectors.toArray()));
+
+		FloatFV[] floatVectors = new FloatFV[vectors.size()];
+		Vector<FloatFV> vec = new Vector<FloatFV>(Arrays.asList(vectors.toArray(floatVectors)));
 		
 		for(int i = 0; i < k; i++)
 		{

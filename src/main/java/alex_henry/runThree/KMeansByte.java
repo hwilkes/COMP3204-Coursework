@@ -32,7 +32,8 @@ public class KMeansByte implements KMeans<ByteFV>
 //		{
 //			means.add(iter.next());
 //		}
-		Vector vec = new Vector(Arrays.asList(vectors.toArray()));
+		ByteFV[] byteVectors = new ByteFV[vectors.size()];
+		Vector<ByteFV> vec = new Vector<ByteFV>(Arrays.asList(vectors.toArray(byteVectors)));
 		
 		for(int i = 0; i < k; i++)
 		{

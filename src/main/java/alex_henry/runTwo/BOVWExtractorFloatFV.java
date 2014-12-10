@@ -3,7 +3,6 @@ package alex_henry.runTwo;
 import java.util.List;
 import java.util.Set;
 
-import org.openimaj.feature.FeatureExtractor;
 import org.openimaj.feature.FloatFV;
 import org.openimaj.feature.FloatFVComparison;
 import org.openimaj.feature.SparseFloatFV;
