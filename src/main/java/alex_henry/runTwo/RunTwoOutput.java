@@ -6,20 +6,21 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.vfs2.FileSystemException;
-import org.openimaj.data.dataset.VFSListDataset;
 import org.openimaj.feature.FloatFV;
 import org.openimaj.image.FImage;
-import org.openimaj.image.ImageUtilities;
 import org.openimaj.ml.annotation.Annotated;
 import org.openimaj.ml.annotation.AnnotatedObject;
 import org.openimaj.ml.annotation.ScoredAnnotation;
+
+import alex_henry.common.ImageLoader;
+import alex_henry.common.TrainingData;
 
 /*
  * Based on code from alex_henry.runTwo.AppTwo
@@ -37,55 +38,39 @@ public class RunTwoOutput {
 		List<Annotated<FImage,String>> trainingAnnotations = new ArrayList<Annotated<FImage,String>>();
 		File testingFolder = new File("./images/testing");
 		File trainingFolder = new File("./images/training");
-		int subs = trainingFolder.listFiles().length - 1;
-		int subsAdded = 0;
 		
 		/*
 		 * Map training image set to filenames
 		 * */
-		Map<String,FImage> teImages = new HashMap<String,FImage>();
-		for(File f : testingFolder.listFiles()){
-			try {
-				teImages.put(f.getName(),ImageUtilities.readF(f));
-			} catch (IOException e) {
-				System.err.println("Unable to read image "+f.getName());
-				
-			}
-		}
-	
-		for(File subFolder : trainingFolder.listFiles())
+		Map<String,FImage> teImages = ImageLoader.loadTestingImages();
+		TrainingData trImages = ImageLoader.loadTrainingImages();
+		
+		for(String className : trImages.getClassNames())
 		{
-			VFSListDataset<FImage> trImages;
-			try {
-				trImages = new VFSListDataset<FImage>(subFolder.getAbsolutePath(), ImageUtilities.FIMAGE_READER);
-			} catch (FileSystemException e) {
-				e.printStackTrace();
-				break;
-			}
+			Map<String,FImage> classImages = trImages.getClass(className);
 			
-			System.out.println(subsAdded++ + "/" + subs);
 			
 			/*
 			*Number of images to user. For generating the vocabulary only 2 images from each training folder are used
 			*/
 			int toUse = 2;
-			if(toUse > trImages.size()){
-				toUse = trImages.size();
+			if(toUse > classImages.size()){
+				toUse = classImages.size();
 			}
-			
+			Iterator<Entry<String, FImage>> iter = classImages.entrySet().iterator();
 			/*
 			 * Add remaining training images to trainingImages and trainingAnnotations
 			 * */
 			for(int i = 0; i < toUse; i++)
 			{
-				FImage f = trImages.get(i);
+				FImage f = iter.next().getValue();
 				trainingImages.add(f);
-				trainingAnnotations.add(new AnnotatedObject<FImage,String>(f,subFolder.getName()));
+				trainingAnnotations.add(new AnnotatedObject<FImage,String>(f,className));
 			}
 			
-			for(int i = toUse; i < trImages.size(); i++)
+			for(int i = toUse; i < classImages.size(); i++)
 			{
-				trainingAnnotations.add(new AnnotatedObject<FImage,String>(trImages.get(i),subFolder.getName()));
+				trainingAnnotations.add(new AnnotatedObject<FImage,String>(iter.next().getValue(),className));
 			}
 			
 		}

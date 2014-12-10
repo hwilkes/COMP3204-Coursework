@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +16,9 @@ import org.openimaj.image.FImage;
 import org.openimaj.image.ImageUtilities;
 import org.openimaj.ml.annotation.Annotated;
 import org.openimaj.ml.annotation.AnnotatedObject;
+
+import alex_henry.common.ImageLoader;
+import alex_henry.common.TrainingData;
 
 /*
  * Based on code from alex_henry.runOne.App
@@ -39,37 +41,24 @@ public class RunOneOutput {
 		/*
 		*mapping test set images to their filenames
 		*/
-		Map<String,FImage> testingImages = new HashMap<String,FImage>();
-		for(File f : testingFolder.listFiles()){
-			try {
-				testingImages.put(f.getName(),ImageUtilities.readF(f));
-			} catch (IOException e) {
-				System.err.println("Unable to read image "+f.getName());
-				
-			}
-		}
+		Map<String,FImage> testingImages = ImageLoader.loadTestingImages();
+		TrainingData trData = ImageLoader.loadTrainingImages();
 
-		for(File subFolder : trainingFolder.listFiles())
+		for(String className : trData.getClassNames())
 		{
-			VFSListDataset<FImage> images;
-			try {
-				images = new VFSListDataset<FImage>(subFolder.getAbsolutePath(), ImageUtilities.FIMAGE_READER);
-			} catch (FileSystemException e) {
-				e.printStackTrace();
-				break;
-			}
+			Map<String,FImage> classImages = trData.getClass(className);
 			
-			for(FImage f : images){
-				trainingAnnotations.add(new AnnotatedObject<FImage,String>(f,subFolder.getName()));
+			for(FImage f : classImages.values()){
+				trainingAnnotations.add(new AnnotatedObject<FImage,String>(f,className));
 			}
 			//Generate TinyImages for each image in training set
 			ListDataset<TinyImage> tinys = new ListBackedDataset<TinyImage>();
-			for(FImage f : images)
+			for(FImage f : classImages.values())
 			{
 				tinys.add(new TinyImage(f,16,16));
 			}
 			//train classifier with TinyImages
-			classifier.addClassValues(tinys, subFolder.getName());
+			classifier.addClassValues(tinys, className);
 		}
 
 		/*
