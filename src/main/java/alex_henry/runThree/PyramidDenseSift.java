@@ -74,7 +74,7 @@ public class PyramidDenseSift {
 
 
 		Set<ByteFV> vectors = new HashSet<ByteFV>();
-		PyramidDenseSIFT<FImage> pds = new PyramidDenseSIFT<FImage>(new DenseSIFT(), 0, 8,16,24,32);
+		PyramidDenseSIFT<FImage> pds = new PyramidDenseSIFT<FImage>(new DenseSIFT(), 0, 16,32,64);
 		for(FImage f : trainingImages)
 		{
 			pds.analyseImage(f);
@@ -105,7 +105,7 @@ public class PyramidDenseSift {
 		 * KMeans calss produces a bag-of-visual-words feature using the patches produced by the PatchExtractor
 		 * */
 		ByteFV[] array = new ByteFV[vocabulary.size()];
-		ClassifierByteFV<PyramidDenseSIFT<FImage>> classifier = new ClassifierByteFV<PyramidDenseSIFT<FImage>>(Arrays.asList(vocabulary.toArray(array)),new PyramidDenseSIFT<FImage>(new DenseSIFT(), 0, 8,16,24,32));
+		ClassifierByteFV<PyramidDenseSIFT<FImage>> classifier = new ClassifierByteFV<PyramidDenseSIFT<FImage>>(Arrays.asList(vocabulary.toArray(array)),new PyramidDenseSIFT<FImage>(new DenseSIFT(), 0, 16,32,64));
 		
 		classifier.train(trainingAnnotations);
 		

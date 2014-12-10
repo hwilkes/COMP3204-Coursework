@@ -21,23 +21,10 @@ public class AppTwo {
 	public static void main(String args[])
 	{
 		
-		//BagOfVisualWords bovw = new BagOfVisualWords(null);
-		
-		/*for each image : trainingSet
-		 * 		vectors = getVectors()
-		 * end
- * 			Set of vectors = get K means of all vectors
- * 			train classifier
-		 * 		
-		 * 
-		 * 
-		 * 
-		 * */
 		List<Annotated<FImage,String>> testingAnnotations = new ArrayList<Annotated<FImage,String>>();
 		
 		Set<FImage> trainingImages = new HashSet<FImage>();
 		List<Annotated<FImage,String>> trainingAnnotations = new ArrayList<Annotated<FImage,String>>();
-		//File folder = new File("./images/training");
 		File folder = new File("./images/training");
 		int subs = folder.listFiles().length - 1;
 		int subsAdded = 0;
