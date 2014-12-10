@@ -77,6 +77,16 @@ public class RunOneOutput {
 		}
 		error = (error/count)*100;
 		System.out.println("Percentage Error: "+error);
+		File errOutput = new File("./Output/RunOneError.txt");
+		FileWriter fEWriter = null;
+		try {
+			fEWriter = new FileWriter(errOutput);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		PrintWriter pEWriter = new PrintWriter(fEWriter);
+		pEWriter.println("Percentage Error: "+error);
+		
 		
 		FileWriter fWriter = null;
 		try {

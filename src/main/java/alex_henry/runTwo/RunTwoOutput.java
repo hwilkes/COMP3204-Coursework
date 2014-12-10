@@ -122,7 +122,15 @@ public class RunTwoOutput {
 		}
 		error = (error/count)*100;
 		System.out.println("Percentage Error: "+error);
-		
+		File errOutput = new File("./Output/RunTwoError.txt");
+		FileWriter fEWriter = null;
+		try {
+			fEWriter = new FileWriter(errOutput);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		PrintWriter pEWriter = new PrintWriter(fEWriter);
+		pEWriter.println("Percentage Error: "+error);
 		
 		File output = new File("./Output/RunTwo.txt");
 		FileWriter fWriter = null;

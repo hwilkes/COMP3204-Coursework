@@ -114,6 +114,15 @@ public class RunThreeOutput {
 		}
 		error = (error/count)*100;
 		System.out.println("Percentage Error: "+error);
+		File errOutput = new File("./Output/RunThreeError.txt");
+		FileWriter fEWriter = null;
+		try {
+			fEWriter = new FileWriter(errOutput);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		PrintWriter pEWriter = new PrintWriter(fEWriter);
+		pEWriter.println("Percentage Error: "+error);
 		
 		File output = new File("./Output/RunThree.txt");
 		FileWriter fWriter = null;
