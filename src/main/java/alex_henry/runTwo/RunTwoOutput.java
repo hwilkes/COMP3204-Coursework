@@ -56,21 +56,12 @@ public class RunTwoOutput {
 			
 			System.out.println(subsAdded++ + "/" + subs);
 			
-			int toUse = 2;
-			if(toUse > trImages.size()){
-				toUse = trImages.size();
-			}
 			
-			for(int i = 0; i < toUse; i++)
+			for(int i = 0; i < trImages.size(); i++)
 			{
 				FImage f = trImages.get(i);
 				trainingImages.add(f);
 				trainingAnnotations.add(new AnnotatedObject<FImage,String>(f,subFolder.getName()));
-			}
-			
-			for(int i = toUse; i < trImages.size(); i++)
-			{
-				trainingAnnotations.add(new AnnotatedObject<FImage,String>(trImages.get(i),subFolder.getName()));
 			}
 			
 		}
@@ -109,6 +100,30 @@ public class RunTwoOutput {
 		
 		classifier.train(trainingAnnotations);
 			
+		double error = 0;
+		int count = 0;
+		for(Annotated<FImage,String> f : trainingAnnotations)
+		{
+			List<ScoredAnnotation<String>> predictions = classifier.annotate(f.getObject());
+			float confidence = 0f; String bestPrediction = null;
+			for(ScoredAnnotation<String> anno : predictions)
+			{
+				if(anno.confidence > confidence)
+				{
+					bestPrediction = anno.annotation;
+					confidence = anno.confidence;
+				}
+			}
+			if(!bestPrediction.equals(f.getAnnotations().iterator().next()))
+			{
+				error++;
+			}
+			count++;
+		}
+		error = (error/count)*100;
+		System.out.println("Percentage Error: "+error);
+		
+		
 		File output = new File("./Output/RunTwo.txt");
 		FileWriter fWriter = null;
 		try {

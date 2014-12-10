@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.vfs2.FileSystemException;
@@ -13,6 +15,8 @@ import org.openimaj.data.dataset.ListDataset;
 import org.openimaj.data.dataset.VFSListDataset;
 import org.openimaj.image.FImage;
 import org.openimaj.image.ImageUtilities;
+import org.openimaj.ml.annotation.Annotated;
+import org.openimaj.ml.annotation.AnnotatedObject;
 
 public class RunOneOutput {
 	
@@ -21,8 +25,10 @@ public class RunOneOutput {
 	public static void main(String[] args){
 		
 		KNearestClassifier classifier = new KNearestClassifier();
-		int K = 500; //TODO set by argument?
+		//int K = 500; //TODO set by argument?
 	
+		List<Annotated<FImage,String>> trainingAnnotations = new ArrayList<Annotated<FImage,String>>();
+
 		File trainingFolder = new File("./images/training");
 		File testingFolder = new File("./images/testing");
 		File output = new File("./Output/RunOne.txt");
@@ -46,6 +52,9 @@ public class RunOneOutput {
 				e.printStackTrace();
 				break;
 			}
+			for(FImage f : images){
+				trainingAnnotations.add(new AnnotatedObject<FImage,String>(f,subFolder.getName()));
+			}
 			ListDataset<TinyImage> tinys = new ListBackedDataset<TinyImage>();
 			for(FImage f : images)
 			{
@@ -54,6 +63,21 @@ public class RunOneOutput {
 			classifier.addClassValues(tinys, subFolder.getName());
 		}
 
+		double error = 0;
+		int count = 0;
+		for(Annotated<FImage,String> f : trainingAnnotations)
+		{
+			String prediction = classifier.classify(f.getObject(),kNearestNeighbours);
+			
+			if(!prediction.equals(f.getAnnotations().iterator().next()))
+			{
+				error++;
+			}
+			count++;
+		}
+		error = (error/count)*100;
+		System.out.println("Percentage Error: "+error);
+		
 		FileWriter fWriter = null;
 		try {
 			fWriter = new FileWriter(output);

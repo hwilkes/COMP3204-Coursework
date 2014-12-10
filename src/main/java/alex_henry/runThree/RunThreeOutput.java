@@ -23,6 +23,7 @@ import org.openimaj.image.feature.dense.gradient.dsift.PyramidDenseSIFT;
 import org.openimaj.image.feature.local.engine.BasicGridSIFTEngine;
 import org.openimaj.image.feature.local.keypoints.Keypoint;
 import org.openimaj.ml.annotation.Annotated;
+import org.openimaj.ml.annotation.AnnotatedObject;
 import org.openimaj.ml.annotation.ScoredAnnotation;
 
 public class RunThreeOutput {
@@ -55,10 +56,12 @@ public class RunThreeOutput {
 				e.printStackTrace();
 				break;
 			}
-			
-			
 
+			for(int i = 0; i < trImages.size(); i++)
+			{
 
+				trainingAnnotations.add(new AnnotatedObject<FImage,String>(trImages.get(i),subFolder.getName()));
+			}
 			
 		}
 		//get ALL the vectors!
@@ -89,6 +92,29 @@ public class RunThreeOutput {
 
 		classifier.train(trainingAnnotations);
 				
+		double error = 0;
+		int count = 0;
+		for(Annotated<FImage,String> f : trainingAnnotations)
+		{
+			List<ScoredAnnotation<String>> predictions = classifier.annotate(f.getObject());
+			float confidence = 0f; String bestPrediction = null;
+			for(ScoredAnnotation<String> anno : predictions)
+			{
+				if(anno.confidence > confidence)
+				{
+					bestPrediction = anno.annotation;
+					confidence = anno.confidence;
+				}
+			}
+			if(!bestPrediction.equals( f.getAnnotations().iterator().next()))
+			{
+				error++;
+			}
+			count++;
+		}
+		error = (error/count)*100;
+		System.out.println("Percentage Error: "+error);
+		
 		File output = new File("./Output/RunThree.txt");
 		FileWriter fWriter = null;
 		try {
@@ -97,6 +123,7 @@ public class RunThreeOutput {
 			e.printStackTrace();
 		}
 		PrintWriter pWriter = new PrintWriter(fWriter);
+
 		
 		for(String key : teImages.keySet())
 		{

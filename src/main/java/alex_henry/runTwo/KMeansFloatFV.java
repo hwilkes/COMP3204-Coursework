@@ -47,7 +47,8 @@ public class KMeansFloatFV implements KMeans<FloatFV>
 		
 		int loops = 0;
 		
-		do{
+		do
+		{
 			prevMap = map;
 			//mean to collection of nearests
 			//final Map<FloatFV, List<FloatFV>> finalMap = new HashMap<FloatFV,List<FloatFV>>();
@@ -123,9 +124,7 @@ public class KMeansFloatFV implements KMeans<FloatFV>
 							
 							FloatFV newMean = new FloatFV(fArray);
 							updatedMeans.add(newMean);
-
 						}
-				
 					});
 			
 
