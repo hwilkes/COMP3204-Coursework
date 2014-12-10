@@ -20,6 +20,9 @@ import org.openimaj.ml.annotation.AnnotatedObject;
 import org.openimaj.ml.annotation.ScoredAnnotation;
 
 public class DenseSift {
+	
+	public static final int SIZE = 16;
+	
 	public static void main(String[] args)
 	{
 
@@ -68,7 +71,7 @@ public class DenseSift {
 		Set<ByteFV> vectors = new HashSet<ByteFV>();
 		for(FImage f : trainingImages)
 		{
-			DenseSIFT sifter = new DenseSIFT(16,16);
+			DenseSIFT sifter = new DenseSIFT(SIZE,SIZE);
 
 			//int sifted = 0;
 			
@@ -96,7 +99,7 @@ public class DenseSift {
 		 * KMeans class produces a bag-of-visual-words feature using the patches produced by the PatchExtractor
 		 * */
 		ByteFV[] array = new ByteFV[vocabulary.size()];
-		ClassifierByteFV<DenseSIFT> classifier = new ClassifierByteFV<DenseSIFT>(Arrays.asList(vocabulary.toArray(array)),new DenseSIFT(16,16));
+		ClassifierByteFV<DenseSIFT> classifier = new ClassifierByteFV<DenseSIFT>(Arrays.asList(vocabulary.toArray(array)),new DenseSIFT(SIZE,SIZE));
         
 		classifier.train(trainingAnnotations);
         
