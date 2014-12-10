@@ -6,26 +6,22 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.vfs2.FileSystemException;
-import org.openimaj.data.dataset.VFSListDataset;
 import org.openimaj.feature.ByteFV;
 import org.openimaj.feature.local.list.LocalFeatureList;
 import org.openimaj.image.FImage;
-import org.openimaj.image.ImageUtilities;
 import org.openimaj.image.feature.dense.gradient.dsift.ByteDSIFTKeypoint;
 import org.openimaj.image.feature.dense.gradient.dsift.DenseSIFT;
-import org.openimaj.image.feature.dense.gradient.dsift.PyramidDenseSIFT;
-import org.openimaj.image.feature.local.engine.BasicGridSIFTEngine;
-import org.openimaj.image.feature.local.keypoints.Keypoint;
 import org.openimaj.ml.annotation.Annotated;
 import org.openimaj.ml.annotation.AnnotatedObject;
 import org.openimaj.ml.annotation.ScoredAnnotation;
+
+import alex_henry.common.ImageLoader;
+import alex_henry.common.TrainingData;
 
 /*
  * Based on code from alex_henry.runThree.DenseSift
@@ -42,30 +38,16 @@ public class RunThreeOutput {
 	
 		Set<FImage> trainingImages = new HashSet<FImage>();
 		List<Annotated<FImage,String>> trainingAnnotations = new ArrayList<Annotated<FImage,String>>();
-		File testingFolder = new File("./images/testing");
-		File trainingFolder = new File("./images/training");
 		
 		//map of training set to filenames
-		Map<String,FImage> teImages = new HashMap<String,FImage>();
-		for(File f : testingFolder.listFiles()){
-			try {
-				teImages.put(f.getName(),ImageUtilities.readF(f));
-			} catch (IOException e) {
-				System.err.println("Unable to read image "+f.getName());
-				
-			}
-		}
+		Map<String,FImage> teImages = ImageLoader.loadTestingImages();
 	
-		for(File subFolder : trainingFolder.listFiles())
+		TrainingData data = ImageLoader.loadTrainingImages();
+		
+		for(String className : data.getClassNames())
 		{
 			
-			VFSListDataset<FImage> trImages;
-			try {
-				trImages = new VFSListDataset<FImage>(subFolder.getAbsolutePath(), ImageUtilities.FIMAGE_READER);
-			} catch (FileSystemException e) {
-				e.printStackTrace();
-				break;
-			}
+			List<FImage> trImages = new ArrayList<FImage>(data.getClass(className).values());
 			
 			//Two images from each folder in the training set are used for generating the vocabulary
 			int toUse = 2;
@@ -77,16 +59,12 @@ public class RunThreeOutput {
 			{
 				FImage f = trImages.get(i);
 				trainingImages.add(f);
-				trainingAnnotations.add(new AnnotatedObject<FImage,String>(f,subFolder.getName()));
+				trainingAnnotations.add(new AnnotatedObject<FImage,String>(f,className));
 			}
 
 			for(int i = toUse; i < trImages.size(); i++)
 			{
-//				if(i == toUse)
-//				{
-//					testingAnnotations.add(new AnnotatedObject<FImage,String>(trImages.get(i),subFolder.getName()));
-//				}
-				trainingAnnotations.add(new AnnotatedObject<FImage,String>(trImages.get(i),subFolder.getName()));
+				trainingAnnotations.add(new AnnotatedObject<FImage,String>(trImages.get(i),className));
 			}
 			
 		}
