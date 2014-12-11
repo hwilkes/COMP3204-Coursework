@@ -19,6 +19,6 @@ public interface RunClassifier {
 	public Map<String,String> getClassifications(Map<String,FImage> testimages);
 	//Gets error on training set, should be calculated in giveData method
 	public Double getTrainingError();
-	//Gets classification error on a labeled set of test images
+	//Gets classification error on a labelled set of test images
 	public Double getClassificationError(Map<FImage,String> labeledTestImages);
 }
