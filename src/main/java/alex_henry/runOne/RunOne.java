@@ -13,6 +13,11 @@ import org.openimaj.ml.annotation.AnnotatedObject;
 
 import alex_henry.interfaces.RunClassifier;
 
+/*
+ * Implements RunClassifier to use the K-Nearest Neighbours classifier from Run One. 
+ * Has both constructors for both passing the value for K and for using the recommended default value 
+ * */
+
 public class RunOne implements RunClassifier {
 
 	private static final int DEFAULT_K = 29;

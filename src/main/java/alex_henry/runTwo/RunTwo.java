@@ -23,6 +23,11 @@ public class RunTwo implements RunClassifier {
 	protected ClassifierFloatFV classifier;
 	protected Double trainingError;
 	
+	/*
+	 * Implements RunClassifier to use the Linear Classifier using LibLinearannotator from Run Two 
+	 * */
+
+	
 	@Override
 	public void giveData(Map<String, Map<String, FImage>> trainingimages) {
 		
