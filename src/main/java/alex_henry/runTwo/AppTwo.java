@@ -102,16 +102,7 @@ public class AppTwo {
 			}
 			System.out.println();
 		}
-		
-			
-		
-		
-		/*classify image {
-		 * v = getVectors(image)
-		 * 
-		 * bag of words = 
-		 * 
-		 * */
+
 	}
 	
 	public static boolean isNaNy(FloatFV vector){

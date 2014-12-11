@@ -64,8 +64,6 @@ public class DenseSift {
 		for(FImage f : trainingImages)
 		{
 			DenseSIFT sifter = new DenseSIFT(SIZE,SIZE);
-
-			//int sifted = 0;
 			
 			sifter.analyseImage(f);
 			LocalFeatureList<ByteDSIFTKeypoint> featurePoints = sifter.getByteKeypoints();
@@ -74,10 +72,6 @@ public class DenseSift {
 				//build a sift descriptor, add to the list of sift descriptors
 				vectors.add(point.getFeatureVector());
 			}
-			/*sifted++;
-			if(sifted%100 == 0){
-				System.out.println(sifted + " images sifted");
-			}*/
 		}
 
 		//System.out.println("Patching complete");
