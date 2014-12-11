@@ -14,25 +14,33 @@ import alex_henry.runThree.RunThree;
 import alex_henry.runTwo.RunTwo;
 
 public class Output {
+	
+	private TrainingData trainingImages;
+	private Map<String,FImage> testImages;
+	
+	public Output(){
+		testImages =  ImageLoader.loadTestingImages();
+		trainingImages = ImageLoader.loadTrainingImages();
+	}
+	
 	public static void main(String[] args)
 	{
+		Output output = new Output();
+		
 		File runOneOutput = new File("./Output/runOne.txt");
 		File runTwoOutput = new File("./Output/run2.txt");
 		File runThreeOutput = new File("./Output/run3.txt");
 		
 		RunOne one = new RunOne();
-		writeToFile(one,runOneOutput);
+		output.writeToFile(one,runOneOutput);
 		RunTwo two = new RunTwo();
-		writeToFile(two,runTwoOutput);
+		output.writeToFile(two,runTwoOutput);
 		RunThree three = new RunThree();
-		writeToFile(three,runThreeOutput);
+		output.writeToFile(three,runThreeOutput);
 	}
 	
-	public static void writeToFile(RunClassifier classifier, File output)
+	public void writeToFile(RunClassifier classifier, File output)
 	{
-		Map<String,FImage> testImages =  ImageLoader.loadTestingImages();
-		TrainingData trainingImages = ImageLoader.loadTrainingImages();
-		
 		classifier.giveData(trainingImages.data);
 		
 		Map<String,String> classifications = classifier.getClassifications(testImages);
