@@ -12,7 +12,7 @@ import org.openimaj.image.FImage;
 
 public interface RunClassifier {
 	//Trains classifier NOTE: This generally needs to be called before any other method in interface to initialise classifier
-	//Argumene is a map of image classes to a map of image filenames to the images themselves
+	//Argument is a map of image classes to a map of image filenames to the images themselves
 	public void giveData(Map<String,Map<String,FImage>> trainingimages);
 	//Classifies set of training images, argument is map of training images filenames to the images themselves
 	//Returns map of filenames to classifications
