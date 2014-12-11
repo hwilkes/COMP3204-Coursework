@@ -12,7 +12,7 @@ import org.openimaj.ml.annotation.Annotated;
 import org.openimaj.ml.annotation.AnnotatedObject;
 
 import alex_henry.interfaces.RunClassifier;
-
+//based on the testing implementation in App
 public class RunOne implements RunClassifier {
 
 	private static final int DEFAULT_K = 29;

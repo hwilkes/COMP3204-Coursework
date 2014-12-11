@@ -18,7 +18,7 @@ import org.openimaj.ml.annotation.AnnotatedObject;
 import org.openimaj.ml.annotation.ScoredAnnotation;
 
 import alex_henry.interfaces.RunClassifier;
-
+//based on the testing implementation in DenseSIFT
 public class RunThree implements RunClassifier {
 
 	protected ClassifierByteFV<DenseSIFT> classifier;
