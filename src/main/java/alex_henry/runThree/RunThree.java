@@ -23,6 +23,11 @@ public class RunThree implements RunClassifier {
 
 	protected ClassifierByteFV<DenseSIFT> classifier;
 	protected Double trainingError = null;
+	
+	/*
+	 * Implements RunClassifier and based on the Dense SIFT classifier from DenseSift
+	 * */
+	
 	@Override
 	public void giveData(Map<String, Map<String, FImage>> trainingimages) {
 		

@@ -17,11 +17,16 @@ import org.openimaj.ml.annotation.AnnotatedObject;
 import org.openimaj.ml.annotation.ScoredAnnotation;
 
 import alex_henry.interfaces.RunClassifier;
-//based on the testing implementation in AppTwo
+
 public class RunTwo implements RunClassifier {
 
 	protected ClassifierFloatFV classifier;
 	protected Double trainingError;
+	
+	/*
+	 * Implements RunClassifier and based on the Linear Classifier using LibLinearannotator from AppTwo 
+	 * */
+
 	
 	@Override
 	public void giveData(Map<String, Map<String, FImage>> trainingimages) {
