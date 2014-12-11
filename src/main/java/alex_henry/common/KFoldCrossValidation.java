@@ -12,7 +12,7 @@ import alex_henry.interfaces.RunClassifier;
 
 public class KFoldCrossValidation {
 
-	public static Double getAccuracy(int k, TrainingData data, RunClassifier runner){
+	public static KFoldResult getAccuracy(int k, TrainingData data, RunClassifier runner){
 		List<Map<FImage,String>> labeledImages = new ArrayList<Map<FImage, String>>();
 
 		for(int i=0; i<k; i++){
@@ -32,7 +32,7 @@ public class KFoldCrossValidation {
 		}
 
 
-		ArrayList<Double> accuracies = new ArrayList<Double>();
+		ArrayList<Double> errors = new ArrayList<Double>();
 		//using each 10th to test
 		for(Map<FImage,String> testing : labeledImages){
 			//build the training and test sets
@@ -54,12 +54,13 @@ public class KFoldCrossValidation {
 							training.put(className, new HashMap<String,FImage>());
 						}
 						theClass.put(addedImages.toString(), image);
+						addedImages++;
 					}
 				}
 			}
 			//determine the accuracy of them
 			runner.giveData(training);
-			accuracies.add(runner.getClassificationError(testing));
+			errors.add(runner.getClassificationError(testing));
 
 			
 		}
@@ -67,7 +68,7 @@ public class KFoldCrossValidation {
 		double sum = 0;
 		double lowest = Double.MAX_VALUE;
 		double highest = Double.MIN_VALUE;
-		for(Double d : accuracies){
+		for(Double d : errors){
 			sum += d;
 			if(lowest > d){
 				lowest = d;
@@ -76,8 +77,21 @@ public class KFoldCrossValidation {
 				highest = d;
 			}
 		}
-		double mean = sum / accuracies.size();
-		return mean;
+		double mean = sum / errors.size();
+		return new KFoldResult(highest,lowest,mean);
 	}
 
+	public static class KFoldResult{
+		final public double highestError;
+		final public double lowestError;
+		final public double meanError;
+		
+		public KFoldResult(double highestErr, double lowestErr, double meanErr){
+			highestError = highestErr;
+			lowestError = lowestErr;
+			meanError = meanErr;
+		}
+		
+	}
+	
 }

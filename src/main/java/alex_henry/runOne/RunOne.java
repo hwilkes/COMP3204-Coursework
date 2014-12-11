@@ -15,11 +15,23 @@ import alex_henry.interfaces.RunClassifier;
 
 public class RunOne implements RunClassifier {
 
-	static final int kNearestNeighbours = 29;
+	private static final int DEFAULT_K = 29;
+	
+	private int kNearestNeighbours;
 	private KNearestClassifier classifier = null;
 	private Double trainingerror = null;
 	private Map<String,String> classifications = null;
 
+	public RunOne(int k)
+	{
+		kNearestNeighbours = k;
+	}
+	
+	public RunOne()
+	{
+		kNearestNeighbours = DEFAULT_K;
+	}
+	
 	@Override
 	public void giveData(Map<String, Map<String, FImage>> trainingimages) {
 		classifier = new KNearestClassifier();
