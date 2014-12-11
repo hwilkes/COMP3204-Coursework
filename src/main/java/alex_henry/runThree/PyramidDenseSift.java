@@ -94,7 +94,7 @@ public class PyramidDenseSift {
 
 		int k = 500;
 		//figure out the k means
-		Set<ByteFV> vocabulary = new KMeansByte().getMeans(k, vectors);
+		Set<ByteFV> vocabulary = new KMeansByteFV().getMeans(k, vectors);
 		System.out.println("I did it!");
 		/*
 		 * KMeans calss produces a bag-of-visual-words feature using the patches produced by the PatchExtractor

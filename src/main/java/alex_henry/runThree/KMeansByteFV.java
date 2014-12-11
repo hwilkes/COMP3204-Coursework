@@ -21,7 +21,7 @@ import alex_henry.interfaces.KMeans;
  * Implementation of KMeans interface for ByteFV feature vector
  * */
 
-public class KMeansByte implements KMeans<ByteFV>
+public class KMeansByteFV implements KMeans<ByteFV>
 {
 
 	private Random r = new Random();

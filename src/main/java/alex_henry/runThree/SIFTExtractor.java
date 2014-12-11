@@ -42,7 +42,7 @@ public class SIFTExtractor implements VectorExtractor<ByteFV> {
 		
 		int k = 500;
 		//figure out the k means
-		Set<ByteFV> vocabulary = new KMeansByte().getMeans(k, vectors);
+		Set<ByteFV> vocabulary = new KMeansByteFV().getMeans(k, vectors);
 		System.out.println("I did it!");
 		return vocabulary;
 	}

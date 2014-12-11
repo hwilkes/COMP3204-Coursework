@@ -9,7 +9,7 @@ import org.openimaj.image.FImage;
 import org.openimaj.image.feature.local.engine.BasicGridSIFTEngine;
 import org.openimaj.image.feature.local.keypoints.Keypoint;
 
-import alex_henry.runThree.KMeansByte;
+import alex_henry.runThree.KMeansByteFV;
 
 public class DenseSIFTExtractor implements VectorExtractor<ByteFV> {
 
@@ -40,7 +40,7 @@ public class DenseSIFTExtractor implements VectorExtractor<ByteFV> {
 
 		int k = 500;
 		//figure out the k means
-		Set<ByteFV> vocabulary = new KMeansByte().getMeans(k, vectors);
+		Set<ByteFV> vocabulary = new KMeansByteFV().getMeans(k, vectors);
 		return vocabulary;
 	}
 

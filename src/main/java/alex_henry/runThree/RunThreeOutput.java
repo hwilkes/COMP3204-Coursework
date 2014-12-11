@@ -92,7 +92,7 @@ public class RunThreeOutput {
 
 		//figure out the k means
 		System.out.println(vectors.size());
-		Set<ByteFV> vocabulary = new KMeansByte().getMeans(k, vectors);
+		Set<ByteFV> vocabulary = new KMeansByteFV().getMeans(k, vectors);
 		/*
 		 * KMeans class produces a bag-of-visual-words feature using the patches produced by the PatchExtractor
 		 * */
