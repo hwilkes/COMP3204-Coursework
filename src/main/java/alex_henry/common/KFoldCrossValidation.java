@@ -30,7 +30,7 @@ public class KFoldCrossValidation {
 				i++;
 			}
 		}
-
+		int runsDone = 0;
 
 		ArrayList<Double> errors = new ArrayList<Double>();
 		//using each 10th to test
@@ -62,7 +62,8 @@ public class KFoldCrossValidation {
 			runner.giveData(training);
 			errors.add(runner.getClassificationError(testing));
 
-			
+			runsDone++;
+			System.out.println("Run " + runsDone + " completed");
 		}
 		//print that accuracy
 		double sum = 0;
