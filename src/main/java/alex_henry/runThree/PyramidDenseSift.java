@@ -20,10 +20,12 @@ import org.openimaj.ml.annotation.ScoredAnnotation;
 import alex_henry.common.ImageLoader;
 import alex_henry.common.TrainingData;
 
+/**
+ * Run 3 test - classifier using visual words built from gaussian pyramid dense sift feature vectors
+ * This is a test implementation which was never used
+ * due to the long execution time making further testing and debugging impractical.
+ */
 public class PyramidDenseSift {
-	/*
-	 * Classifier test for Dense Sift with a Gaussian Pyramid
-	 * */
 	
 	public static void main(String[] args)
 	{

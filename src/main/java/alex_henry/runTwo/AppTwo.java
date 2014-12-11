@@ -15,6 +15,10 @@ import org.openimaj.ml.annotation.ScoredAnnotation;
 import alex_henry.common.ImageLoader;
 import alex_henry.common.TrainingData;
 
+/**
+ * Run 2 - classifier using visual words built from dense patch feature vectors
+ * This is a test implementation which was moved into the RunTwo class and RunClassifier interface
+ */
 public class AppTwo {
 	
 	public static void main(String args[])

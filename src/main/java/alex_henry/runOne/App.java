@@ -15,8 +15,8 @@ import alex_henry.common.TrainingData;
 
 
 /**
- * Run One classifier using K nearest neighbours on TinyImage feature vectors
- *
+ * Run 1 - classifier using K nearest neighbours on TinyImage feature vectors
+ * This is a test implementation which was moved into the RunOne class and RunClassifier interface
  */
 public class App {
 	
